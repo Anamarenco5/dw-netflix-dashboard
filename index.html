@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>DW Netflix Hefesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sidebar con los pasos de Hefesto (secuencia real) + panel de contenido; en celular, barra de pasos desplazable arriba */
+:root{
+  --bg:#f4f5f7; --surface:#ffffff; --surface-2:#eceef2; --line:#d9dce3;
+  --ink:#141a24; --ink-2:#4a5262; --ink-3:#6f7787;
+  --accent:#8a4f0e; --accent-soft:#f6ead9;
+  --code-bg:#f0f1f4;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s7:#6250d6;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Public Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12151b; --surface:#1a1e26; --surface-2:#232833; --line:#2f3542;
+  --ink:#eef0f4; --ink-2:#b9bfcb; --ink-3:#8b93a3;
+  --accent:#e2a75c; --accent-soft:#33291c; --code-bg:#151920;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12151b; --surface:#1a1e26; --surface-2:#232833; --line:#2f3542;
+  --ink:#eef0f4; --ink-2:#b9bfcb; --ink-3:#8b93a3;
+  --accent:#e2a75c; --accent-soft:#33291c; --code-bg:#151920;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(1.9rem,4vw,2.8rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.6rem;font-weight:700}
+h3{font-size:1.12rem;font-weight:700}
+p{margin:0;max-width:68ch}
+code,pre{font-family:var(--f-mono);font-size:.84em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;padding:28px 18px;border-right:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:22px;overflow-y:auto}
+.brand small{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.brand b{font-family:var(--f-display);font-size:1.25rem;display:block;margin-top:2px}
+.brand span{color:var(--ink-3);font-size:.82rem}
+nav.steps{display:flex;flex-direction:column;gap:2px}
+nav.steps button{all:unset;cursor:pointer;display:grid;grid-template-columns:30px 1fr;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;color:var(--ink-2);font-size:.92rem}
+nav.steps button .n{font-family:var(--f-mono);font-size:.75rem;color:var(--ink-3);text-align:center;border:1px solid var(--line);border-radius:6px;padding:1px 0}
+nav.steps button:hover{background:var(--surface-2);color:var(--ink)}
+nav.steps button[aria-current="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+nav.steps button[aria-current="true"] .n{border-color:var(--accent);color:var(--accent)}
+.side .foot{margin-top:auto;font-size:.78rem;color:var(--ink-3)}
+main{padding-block:36px 72px;padding-inline:clamp(16px,4vw,56px);min-width:0}
+section.view{display:flex;flex-direction:column;gap:28px;max-width:1080px}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600;font-family:var(--f-body)}
+.lede{font-size:1.08rem;color:var(--ink-2)}
+.head{display:flex;flex-direction:column;gap:10px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi b{display:block;font-family:var(--f-display);font-size:1.7rem;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--ink-3);font-size:.82rem}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:0;line-height:1.5;color:var(--ink)}
+.kw{color:var(--s1);font-weight:500}
+details{border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+details summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;color:var(--ink-2)}
+details[open] summary{border-bottom:1px solid var(--line)}
+details > div{padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.78rem;padding:2px 9px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.chip.ind{background:var(--accent-soft);border-color:transparent;color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;padding:6px 12px;font-size:.84rem;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.chartbox{position:relative;height:340px;min-width:0}
+.chartbox.tall{height:420px}
+.answer{border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--ink)}
+.qnav{display:flex;flex-wrap:wrap;gap:6px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:10px;z-index:2}
+.qnav a{font-size:.82rem;padding:5px 11px;border:1px solid var(--line);border-radius:999px;color:var(--ink-2);text-decoration:none;background:var(--surface)}
+.qnav a:hover{border-color:var(--accent);color:var(--ink)}
+.q{scroll-margin-top:64px}
+.q .qhead{display:flex;flex-direction:column;gap:8px}
+.q .qhead .eyebrow{font-family:var(--f-mono)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.84rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+/* timeline */
+.timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.tstep{all:unset;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.tstep:hover{border-color:var(--accent)}
+.tstep .n{font-family:var(--f-mono);font-size:.78rem;color:var(--accent)}
+.tstep b{font-family:var(--f-display);font-size:1.05rem}
+.tstep span{color:var(--ink-3);font-size:.85rem}
+/* conceptual model */
+.concept{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
+.concept .col{display:flex;flex-direction:column;gap:8px}
+.concept .col h3{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-family:var(--f-body)}
+.node{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;font-size:.88rem}
+.node small{display:block;color:var(--ink-3);font-family:var(--f-mono);font-size:.74rem}
+.core{background:var(--ink);color:var(--surface);border-radius:12px;padding:20px 18px;font-family:var(--f-display);font-weight:700;text-align:center;font-size:1.05rem}
+.arrow{color:var(--ink-3);font-family:var(--f-mono);text-align:center}
+/* star */
+.star{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch}
+.tbl{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden;font-size:.82rem}
+.tbl header{background:var(--surface-2);padding:7px 12px;font-family:var(--f-mono);font-weight:500;font-size:.82rem;border-bottom:1px solid var(--line)}
+.tbl ul{list-style:none;margin:0;padding:8px 12px;display:flex;flex-direction:column;gap:3px;font-family:var(--f-mono);font-size:.76rem;color:var(--ink-2)}
+.tbl .pk{color:var(--accent);font-weight:500}
+.tbl .fk{color:var(--s1)}
+.tbl.fact{grid-row:span 2;border:2px solid var(--accent)}
+.tbl.fact header{background:var(--accent-soft)}
+.tbl em{font-style:normal;color:var(--ink-3)}
+/* pipeline */
+.pipe{display:flex;flex-direction:column;gap:0}
+.stage{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;padding:18px 0;border-top:1px solid var(--line)}
+.stage:first-child{border-top:none}
+.stage .tag{font-family:var(--f-mono);font-size:.78rem;color:var(--accent);font-weight:500}
+.stage .tag b{display:block;font-family:var(--f-display);font-size:1.05rem;color:var(--ink)}
+.stage .body{display:flex;flex-direction:column;gap:10px;min-width:0}
+.facts{display:flex;flex-wrap:wrap;gap:8px}
+.fact{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:.84rem;background:var(--surface)}
+.fact b{font-variant-numeric:tabular-nums}
+.ok{color:var(--s3);font-weight:600}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:sticky;top:env(safe-area-inset-top,0px);height:auto;flex-direction:row;align-items:center;padding:10px 16px;border-right:none;border-bottom:1px solid var(--line);z-index:5;gap:12px}
+  .brand span,.brand small,.side .foot{display:none}
+  .brand b{font-size:1rem;white-space:nowrap}
+  nav.steps{flex-direction:row;overflow-x:auto;gap:4px}
+  nav.steps button{grid-template-columns:auto auto;white-space:nowrap;padding:6px 9px}
+  .qnav{top:56px}
+  .concept{grid-template-columns:1fr}
+  .arrow{transform:rotate(90deg)}
+  .star{grid-template-columns:1fr 1fr}
+  .tbl.fact{grid-column:1 / -1;grid-row:auto}
+  .stage{grid-template-columns:1fr;gap:8px}
+  .chartbox{height:300px}
+  .chartbox.tall{height:400px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <small>Proyecto grupal · A2</small>
+      <b>DW Netflix</b>
+      <span>Metodología Hefesto</span>
+    </div>
+    <nav class="steps" aria-label="Secciones">
+      <button data-go="inicio"><span class="n">··</span><span>Inicio</span></button>
+      <button data-go="paso1"><span class="n">1</span><span>Requerimientos</span></button>
+      <button data-go="paso2"><span class="n">2</span><span>Fuente de datos</span></button>
+      <button data-go="paso3"><span class="n">3</span><span>Modelo lógico</span></button>
+      <button data-go="paso4"><span class="n">4</span><span>Integración (ETL)</span></button>
+      <button data-go="tablero"><span class="n">▤</span><span>Tablero</span></button>
+      <button data-go="conclusiones"><span class="n">✓</span><span>Conclusiones</span></button>
+    </nav>
+    <div class="foot">Garciarena, Lupica, Marenco y Mas<br>Base de Datos Aplicada</div>
+  </aside>
+
+  <main>
+  <!-- ============ INICIO ============ -->
+  <section class="view" id="v-inicio">
+    <div class="head">
+      <span class="eyebrow">Data Warehouse · Catálogo de Netflix</span>
+      <h1>Cómo se compone y evoluciona el catálogo de Netflix</h1>
+      <p class="lede">Construimos un Data Mart con modelo estrella a partir de 8 807 películas y series, siguiendo los cuatro pasos de la metodología Hefesto. El tablero responde las siete preguntas de negocio con consultas SQL sobre el modelo, no sobre el archivo original.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>8 807</b><span>títulos en el catálogo</span></div>
+      <div class="kpi"><b>6 131</b><span>películas</span></div>
+      <div class="kpi"><b>2 676</b><span>series</span></div>
+      <div class="kpi"><b>122</b><span>países de producción</span></div>
+      <div class="kpi"><b>42</b><span>géneros</span></div>
+      <div class="kpi"><b>25 873</b><span>filas en la tabla de hechos</span></div>
+    </div>
+    <div class="panel">
+      <h3>Recorrido del proyecto</h3>
+      <p style="color:var(--ink-2)">Cada paso de Hefesto se apoya en el anterior. Hacé clic en uno para ver qué hicimos.</p>
+      <div class="timeline">
+        <button class="tstep" data-go="paso1"><span class="n">Paso 1</span><b>Requerimientos</b><span>7 preguntas de negocio, sus indicadores y perspectivas.</span></button>
+        <button class="tstep" data-go="paso2"><span class="n">Paso 2</span><b>Fuente de datos</b><span>Perfil del CSV de Kaggle, mapeo a columnas y granularidad.</span></button>
+        <button class="tstep" data-go="paso3"><span class="n">Paso 3</span><b>Modelo lógico</b><span>Esquema estrella: 7 dimensiones y la tabla <code>hechos_catalogo</code>.</span></button>
+        <button class="tstep" data-go="paso4"><span class="n">Paso 4</span><b>Integración</b><span>ETL en Python: limpieza, staging y carga en MySQL.</span></button>
+        <button class="tstep" data-go="tablero"><span class="n">Resultado</span><b>Tablero</b><span>Consultas SQL, tablas y gráficos por pregunta.</span></button>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Fuente</h3>
+        <p>Dataset <a href="https://www.kaggle.com/datasets/debayank2024/netflix-movies-and-series" target="_blank" rel="noopener" style="color:var(--accent)">Netflix Movies and Series</a> (Kaggle): un archivo <code>netflix_titles.csv</code> con 12 columnas por título, como país, director, género, clasificación, duración y fechas de estreno e incorporación.</p>
+      </div>
+      <div class="panel">
+        <h3>Herramientas</h3>
+        <ul class="clean">
+          <li><b>MySQL</b> (Workbench) para el modelo estrella y las vistas por pregunta.</li>
+          <li><b>Python en JupyterLab</b> con pandas, SQLAlchemy y PyMySQL para el ETL.</li>
+          <li><b>matplotlib</b> para los gráficos del <code>dashboard.md</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PASO 1 ============ -->
+  <section class="view" id="v-paso1" hidden>
+    <div class="head">
+      <span class="eyebrow">Paso 1 · Análisis de requerimientos</span>
+      <h2>Qué queremos saber del catálogo</h2>
+      <p class="lede">El objetivo es analizar la gestión e incorporación de contenidos en la plataforma: qué películas y series se suman, de qué países y géneros, y cómo cambia el catálogo con el tiempo. Esa composición refleja decisiones comerciales, económicas y políticas de la empresa.</p>
+    </div>
+    <div class="panel">
+      <h3>Preguntas de negocio, indicadores y perspectivas</h3>
+      <p style="color:var(--ink-2)">Los <b>indicadores</b> son los valores que se miden o calculan. Las <b>perspectivas</b> son las dimensiones desde las que se analizan.</p>
+      <div class="tw"><table>
+        <thead><tr><th>#</th><th>Pregunta</th><th>Indicadores</th><th>Perspectivas</th></tr></thead>
+        <tbody id="t-req"></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <h3>Modelo conceptual</h3>
+      <div class="concept">
+        <div class="col"><h3>Perspectivas</h3>
+          <div class="node">País</div><div class="node">Tiempo</div><div class="node">Tipo de contenido</div><div class="node">Género</div><div class="node">Director</div><div class="node">Clasificación</div><div class="node">Duración</div>
+        </div>
+        <div class="col" style="align-items:center"><span class="arrow">→</span><div class="core">Catálogo<br>de Netflix</div><span class="arrow">→</span></div>
+        <div class="col"><h3>Indicadores</h3>
+          <div class="node">Cantidad de títulos</div><div class="node">Tiempo transcurrido</div><div class="node">Frecuencia de combinación</div><div class="node">% de participación</div><div class="node">Diversidad de género</div><div class="node">Duración promedio</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PASO 2 ============ -->
+  <section class="view" id="v-paso2" hidden>
+    <div class="head">
+      <span class="eyebrow">Paso 2 · Análisis de los datos fuente</span>
+      <h2>Del archivo a las perspectivas</h2>
+      <p class="lede">Revisamos cada columna del CSV, definimos la fórmula de cada indicador y elegimos la granularidad de cada perspectiva.</p>
+    </div>
+    <div class="panel">
+      <h3>Perfil del archivo</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Columna</th><th>Tipo</th><th>Descripción</th><th class="num">Vacíos</th></tr></thead>
+        <tbody id="t-perfil"></tbody>
+      </table></div>
+      <p style="color:var(--ink-3);font-size:.85rem">Vacíos medidos en el ETL sobre las 8 807 filas. No hay filas ni <code>show_id</code> duplicados.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Indicadores y su cálculo</h3>
+        <div class="tw"><table>
+          <thead><tr><th>Indicador</th><th>Fórmula</th></tr></thead>
+          <tbody id="t-ind"></tbody>
+        </table></div>
+      </div>
+      <div class="panel">
+        <h3>Perspectivas y columnas del archivo</h3>
+        <div class="tw"><table>
+          <thead><tr><th>Perspectiva</th><th>Columna</th><th>Granularidad</th></tr></thead>
+          <tbody id="t-gran"></tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Por qué esta granularidad</h3>
+      <ul class="clean">
+        <li><b>País</b> se trabaja a nivel individual: agrupar por región perdería detalle sin aportar nada nuevo.</li>
+        <li><b>Tiempo</b> se analiza por año: buscamos tendencias de incorporación y lanzamiento, y el día o el mes no agregan valor.</li>
+        <li><b>Género, país y director</b> pueden traer varios valores separados por coma en una misma celda, así que se separan en valores individuales.</li>
+        <li><b>Duración</b> se divide en número y unidad, porque las películas usan minutos y las series, temporadas.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PASO 3 ============ -->
+  <section class="view" id="v-paso3" hidden>
+    <div class="head">
+      <span class="eyebrow">Paso 3 · Modelo lógico del DW</span>
+      <h2>Un esquema estrella</h2>
+      <p class="lede">Todo el análisis gira en torno a un único hecho: la presencia de un título en el catálogo. No hay otros procesos que justifiquen una constelación, y las perspectivas no tienen jerarquías que ameriten un copo de nieve. En la estrella, cualquier indicador sale con una sola unión entre la tabla de hechos y la dimensión que se quiera analizar.</p>
+    </div>
+    <div class="panel">
+      <h3>Diagrama del modelo</h3>
+      <div class="star" id="star"></div>
+      <p style="color:var(--ink-3);font-size:.85rem"><span style="color:var(--accent)">PK</span> clave primaria · <span style="color:var(--s1)">FK</span> clave foránea. <code>dim_tiempo</code> se referencia dos veces: año de incorporación y año de lanzamiento.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Decisiones de diseño</h3>
+        <ul class="clean">
+          <li><b>Una sola dimensión de tiempo</b> para <code>date_added</code> y <code>release_year</code>; la tabla de hechos la usa dos veces.</li>
+          <li><b>Granularidad título × país × género × director</b>, porque esas tres columnas traen varios valores por celda.</li>
+          <li><b>Miembro "Sin dato" (id = 1)</b> en cada dimensión, para que ninguna clave foránea quede nula y no se pierdan filas en las uniones.</li>
+          <li><b><code>show_id</code> como dimensión degenerada</b>: identifica el título pero no tiene atributos propios, así que vive en la tabla de hechos y forma parte de la clave primaria.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Regla de cálculo</h3>
+        <p>Como un título ocupa varias filas, los conteos usan <code>COUNT(DISTINCT show_id)</code> y los promedios se calculan sobre títulos distintos.</p>
+        <div class="kpis" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+          <div class="kpi"><b>623</b><span>filas de Estados Unidos + Documentaries</span></div>
+          <div class="kpi"><b>512</b><span>títulos reales de esa combinación</span></div>
+        </div>
+        <p style="color:var(--ink-2)">Sumar filas daría un 22 % de más. En total hay 25 873 filas para 8 807 títulos.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Verificación del supuesto de granularidad</h3>
+      <p style="color:var(--ink-2)">Antes de cargar comprobamos que, al separar las listas, no aparecieran valores repetidos ni vacíos que rompieran la clave primaria.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Columna</th><th class="num">Filas con repetidos</th><th class="num">Filas con vacíos</th><th>Ejemplos</th></tr></thead>
+        <tbody>
+          <tr><td><code>country</code></td><td class="num">0</td><td class="num">7</td><td>s194 ", South Korea"; s1193 "United Kingdom,"</td></tr>
+          <tr><td><code>listed_in</code></td><td class="num">0</td><td class="num">0</td><td>—</td></tr>
+          <tr><td><code>director</code></td><td class="num">2</td><td class="num">0</td><td>s3719 "Miguel Cohan, Miguel Cohan"</td></tr>
+        </tbody>
+      </table></div>
+      <p>Por eso la carga descarta elementos vacíos y se queda con valores distintos por título.</p>
+    </div>
+  </section>
+
+  <!-- ============ PASO 4 ============ -->
+  <section class="view" id="v-paso4" hidden>
+    <div class="head">
+      <span class="eyebrow">Paso 4 · Integración de datos</span>
+      <h2>El ETL, etapa por etapa</h2>
+      <p class="lede">Programamos la carga en un notebook de JupyterLab (<code>etl_netflix.ipynb</code>) con pandas y SQLAlchemy, contra la base <code>dw_netflix</code> en MySQL.</p>
+    </div>
+    <div class="panel pipe">
+      <div class="stage"><div class="tag">Etapa 1<b>Extracción</b></div><div class="body">
+        <p>Leímos <code>netflix_titles.csv</code> y revisamos tipos, vacíos y duplicados. Los datos crudos se guardaron sin cambios en la tabla de staging <code>stg_netflix</code>.</p>
+        <div class="facts"><span class="fact"><b>8 807</b> filas × 12 columnas</span><span class="fact"><b>0</b> duplicados</span><span class="fact"><b>8 807</b> filas en staging</span></div>
+      </div></div>
+      <div class="stage"><div class="tag">Etapa 2<b>Transformación</b></div><div class="body">
+        <ul class="clean">
+          <li><b>3 títulos</b> tenían la duración cargada por error en <code>rating</code> (por ejemplo "74 min"). Se movió a <code>duration</code> y el rating quedó vacío.</li>
+          <li>Se quitaron espacios sobrantes en las columnas de texto.</li>
+          <li><code>director</code>, <code>country</code> y <code>rating</code> vacíos pasaron a <b>"Sin dato"</b>.</li>
+          <li>Se convirtió <code>date_added</code> a fecha; <b>10 títulos</b> no tienen fecha de incorporación.</li>
+          <li>Se calculó <code>anios_hasta_incorporacion</code>. <b>14 títulos</b> (12 series) figuraban incorporados antes de su estreno y ese valor quedó vacío.</li>
+          <li>La duración se separó en número y unidad: 6 131 películas en minutos y 2 676 series en temporadas.</li>
+          <li>País, género y director se separaron por coma, descartando vacíos y repetidos. Se unificaron <b>10 nombres</b> de directores escritos con distinta tilde o mayúscula.</li>
+        </ul>
+        <div class="facts"><span class="fact"><b>10 843</b> filas título-país</span><span class="fact"><b>19 323</b> título-género</span><span class="fact"><b>9 611</b> título-director</span></div>
+      </div></div>
+      <div class="stage"><div class="tag">Etapa 3<b>Carga</b></div><div class="body">
+        <p>Primero se cargaron las dimensiones; después se leyeron sus claves desde MySQL para armar la tabla de hechos.</p>
+        <div class="tw"><table>
+          <thead><tr><th>Tabla</th><th class="num">Filas</th></tr></thead>
+          <tbody id="t-carga"></tbody>
+        </table></div>
+      </div></div>
+      <div class="stage"><div class="tag">Etapa 4<b>Verificación</b></div><div class="body">
+        <div class="tw"><table>
+          <thead><tr><th>Control</th><th class="num">DW</th><th class="num">Archivo</th><th>Resultado</th></tr></thead>
+          <tbody>
+            <tr><td>Títulos distintos en hechos</td><td class="num">8 807</td><td class="num">8 807</td><td class="ok">Coincide</td></tr>
+            <tr><td>Películas</td><td class="num">6 131</td><td class="num">6 131</td><td class="ok">Coincide</td></tr>
+            <tr><td>Series</td><td class="num">2 676</td><td class="num">2 676</td><td class="ok">Coincide</td></tr>
+            <tr><td>Títulos de United States</td><td class="num">3 690</td><td class="num">3 690</td><td class="ok">Coincide</td></tr>
+            <tr><td>Claves vacías o primarias repetidas</td><td class="num">0</td><td class="num">—</td><td class="ok">Sin errores</td></tr>
+          </tbody>
+        </table></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- ============ TABLERO ============ -->
+  <section class="view" id="v-tablero" hidden>
+    <div class="head">
+      <span class="eyebrow">Explotación del Data Mart</span>
+      <h2>Tablero: las siete preguntas</h2>
+      <p class="lede">Cada respuesta sale de una vista creada sobre el modelo estrella en <code>dw_netflix</code>. Abajo de cada gráfico están la consulta SQL y la tabla de resultados.</p>
+      <p><a href="dashboard.html" style="color:var(--accent);font-weight:600">Ver el dashboard.md generado en JupyterLab →</a></p>
+    </div>
+    <nav class="qnav" id="qnav" aria-label="Preguntas"></nav>
+    <div id="questions" style="display:flex;flex-direction:column;gap:28px"></div>
+  </section>
+
+  <!-- ============ CONCLUSIONES ============ -->
+  <section class="view" id="v-conclusiones" hidden>
+    <div class="head">
+      <span class="eyebrow">Cierre</span>
+      <h2>Conclusiones</h2>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>Un catálogo mayoritariamente estadounidense</h3><p>Estados Unidos aparece en 3 690 títulos, más de tres veces que India (1 046), el segundo. Igual, India lidera la combinación más frecuente del catálogo: películas internacionales.</p></div>
+      <div class="panel"><h3>Cada vez más estrenos</h3><p>El 55 % de los títulos llegó a Netflix el mismo año de su estreno o al siguiente. Las series se incorporan antes (2,3 años en promedio) que las películas (5,7).</p></div>
+      <div class="panel"><h3>Lo reciente es más corto y más adulto</h3><p>Frente al contenido anterior a 2010, lo reciente tiene más series (33 % contra 14 %), películas 17 minutos más cortas y mayor peso de la clasificación TV-MA (41 % contra 13 %).</p></div>
+      <div class="panel"><h3>Volumen y diversidad van juntos</h3><p>Los países con más títulos cubren más géneros: Estados Unidos llega a 42. Aun así, hay catálogos chicos muy variados, como República Checa con 22 géneros en 22 títulos.</p></div>
+      <div class="panel"><h3>Directores de nicho</h3><p>Los directores más frecuentes producen muchos títulos de un mismo formato, sobre todo especiales de stand-up y animación infantil, y casi exclusivamente películas.</p></div>
+      <div class="panel"><h3>El modelo responde todo</h3><p>Las siete preguntas se resolvieron con una vista sobre la tabla de hechos y sus dimensiones, contando títulos distintos para no inflar resultados por la granularidad.</p></div>
+    </div>
+  </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const D = {"q1": {"paises": ["United States", "India", "United Kingdom", "Canada", "France", "Japan", "Spain", "South Korea"], "anios": [2015, 2016, 2017, 2018, 2019, 2020, 2021], "rows": [["United States", 2019, "Movie", 678], ["United States", 2020, "Movie", 582], ["United States", 2018, "Movie", 455], ["United States", 2021, "Movie", 452], ["United States", 2017, "Movie", 364], ["India", 2018, "Movie", 332], ["United States", 2020, "TV Show", 246], ["India", 2019, "Movie", 200], ["India", 2020, "Movie", 181], ["United States", 2019, "TV Show", 178], ["United States", 2021, "TV Show", 175], ["India", 2017, "Movie", 148], ["United States", 2018, "TV Show", 145], ["United States", 2016, "Movie", 139], ["United Kingdom", 2019, "Movie", 131], ["United Kingdom", 2018, "Movie", 103], ["United States", 2017, "TV Show", 98], ["United Kingdom", 2020, "Movie", 97], ["India", 2021, "Movie", 88], ["United Kingdom", 2021, "Movie", 83], ["United Kingdom", 2017, "Movie", 81], ["Canada", 2020, "Movie", 79], ["France", 2020, "Movie", 74], ["United States", 2016, "TV Show", 64], ["Canada", 2018, "Movie", 62], ["Canada", 2019, "Movie", 62], ["France", 2019, "Movie", 61], ["United Kingdom", 2019, "TV Show", 60], ["Canada", 2017, "Movie", 54], ["United Kingdom", 2017, "TV Show", 53], ["France", 2021, "Movie", 49], ["United Kingdom", 2020, "TV Show", 49], ["France", 2018, "Movie", 48], ["Japan", 2020, "TV Show", 48], ["France", 2017, "Movie", 47], ["Japan", 2019, "TV Show", 45], ["South Korea", 2019, "TV Show", 45], ["South Korea", 2020, "TV Show", 44], ["United Kingdom", 2018, "TV Show", 44], ["Canada", 2021, "Movie", 41], ["United States", 2015, "Movie", 41], ["Spain", 2017, "Movie", 37], ["Spain", 2018, "Movie", 37], ["United Kingdom", 2021, "TV Show", 37], ["Spain", 2019, "Movie", 36], ["South Korea", 2017, "TV Show", 32], ["United Kingdom", 2016, "Movie", 32], ["Canada", 2020, "TV Show", 31], ["Japan", 2018, "TV Show", 31], ["Japan", 2020, "Movie", 31], ["Japan", 2019, "Movie", 29], ["Japan", 2021, "TV Show", 29], ["Spain", 2020, "Movie", 26], ["Japan", 2016, "TV Show", 24], ["Japan", 2021, "Movie", 24], ["France", 2020, "TV Show", 23], ["Canada", 2019, "TV Show", 22], ["United Kingdom", 2016, "TV Show", 22], ["South Korea", 2021, "TV Show", 21], ["Spain", 2021, "Movie", 21], ["Japan", 2017, "TV Show", 20], ["Canada", 2018, "TV Show", 19], ["Canada", 2021, "TV Show", 18], ["France", 2019, "TV Show", 18], ["India", 2019, "TV Show", 18], ["India", 2020, "TV Show", 18], ["South Korea", 2018, "TV Show", 18], ["Canada", 2017, "TV Show", 17], ["India", 2018, "TV Show", 17], ["India", 2021, "TV Show", 17], ["Japan", 2017, "Movie", 17], ["Spain", 2019, "TV Show", 17], ["Spain", 2020, "TV Show", 17], ["Canada", 2016, "Movie", 16], ["France", 2016, "Movie", 16], ["France", 2018, "TV Show", 16], ["United States", 2015, "TV Show", 16], ["South Korea", 2018, "Movie", 15], ["Canada", 2016, "TV Show", 14], ["India", 2017, "TV Show", 14], ["South Korea", 2019, "Movie", 14], ["France", 2016, "TV Show", 13], ["India", 2016, "Movie", 13], ["Japan", 2018, "Movie", 13], ["Spain", 2016, "Movie", 13], ["South Korea", 2020, "Movie", 12], ["Spain", 2021, "TV Show", 12], ["France", 2021, "TV Show", 11], ["South Korea", 2017, "Movie", 11], ["South Korea", 2016, "TV Show", 10], ["South Korea", 2021, "Movie", 8], ["France", 2015, "Movie", 6], ["France", 2017, "TV Show", 6], ["Spain", 2018, "TV Show", 6], ["Japan", 2016, "Movie", 5], ["Spain", 2017, "TV Show", 5], ["United Kingdom", 2015, "TV Show", 5], ["Spain", 2016, "TV Show", 4], ["Canada", 2015, "Movie", 3], ["Canada", 2015, "TV Show", 3], ["France", 2015, "TV Show", 3], ["United Kingdom", 2015, "Movie", 3], ["Japan", 2015, "TV Show", 1], ["South Korea", 2016, "Movie", 1]]}, "q2_rango": [["0", 1862, 1379], ["1", 1178, 407], ["2–5", 1302, 531], ["6–10", 712, 207], ["11–20", 613, 92], [">20", 462, 38]], "q2_dec": [[1960, "Movie", 54.6, 23], [1960, "TV Show", 52.0, 2], [1970, "Movie", 43.7, 66], [1970, "TV Show", 42.2, 4], [1980, "Movie", 34.2, 122], [1980, "TV Show", 31.3, 7], [1990, "Movie", 24.2, 241], [1990, "TV Show", 22.2, 33], [2000, "Movie", 13.6, 677], [2000, "TV Show", 11.7, 130], [2010, "Movie", 2.4, 4182], [2010, "TV Show", 1.8, 1731], [2020, "Movie", 0.2, 794], [2020, "TV Show", 0.1, 744]], "q2_res": [["Movie", 6129, 5.73, 2.0], ["TV Show", 2654, 2.31, 0.0]], "q2_total": [8783, 4.7, 54.9, 15.3], "q3": {"Movie": [["India", "International Movies", 864, 9.81], ["United States", "Dramas", 835, 9.48], ["United States", "Comedies", 680, 7.72], ["India", "Dramas", 662, 7.52], ["United States", "Documentaries", 512, 5.81], ["United States", "Action & Adventure", 404, 4.59], ["United States", "Children & Family Movies", 390, 4.43], ["United States", "Independent Movies", 390, 4.43], ["India", "Comedies", 323, 3.67], ["United States", "Thrillers", 292, 3.32]], "TV Show": [["United States", "TV Comedies", 258, 2.93], ["United States", "TV Dramas", 232, 2.63], ["United Kingdom", "British TV Shows", 225, 2.55], ["United States", "Kids' TV", 214, 2.43], ["United States", "Docuseries", 192, 2.18], ["South Korea", "International TV Shows", 152, 1.73], ["Japan", "International TV Shows", 151, 1.71], ["United States", "Crime TV Shows", 145, 1.65], ["Japan", "Anime Series", 143, 1.62], ["South Korea", "Korean TV Shows", 132, 1.5]]}, "q3_all": [["India", "International Movies", "Movie", 864, 9.81], ["United States", "Dramas", "Movie", 835, 9.48], ["United States", "Comedies", "Movie", 680, 7.72], ["India", "Dramas", "Movie", 662, 7.52], ["United States", "Documentaries", "Movie", 512, 5.81], ["United States", "Action & Adventure", "Movie", 404, 4.59], ["United States", "Children & Family Movies", "Movie", 390, 4.43], ["United States", "Independent Movies", "Movie", 390, 4.43], ["India", "Comedies", "Movie", 323, 3.67], ["United States", "Thrillers", "Movie", 292, 3.32]], "q4_tipo": [["Antiguo", "Movie", 1153, 113.3], ["Antiguo", "TV Show", 182, 2.3], ["Reciente", "Movie", 4978, 96.4], ["Reciente", "TV Show", 2494, 1.7]], "q4_gen": {"Antiguo": [["Dramas", 484, 36.3], ["International Movies", 449, 33.6], ["Comedies", 418, 31.3], ["Action & Adventure", 288, 21.6], ["Romantic Movies", 141, 10.6], ["Children & Family Movies", 116, 8.7]], "Reciente": [["International Movies", 2303, 30.8], ["Dramas", 1943, 26.0], ["International TV Shows", 1284, 17.2], ["Comedies", 1256, 16.8], ["Documentaries", 817, 10.9], ["TV Dramas", 731, 9.8]]}, "q4_rat": {"Antiguo": [["TV-14", 350, 26.2], ["R", 248, 18.6], ["PG-13", 213, 16.0], ["TV-MA", 177, 13.3], ["TV-PG", 127, 9.5], ["PG", 116, 8.7]], "Reciente": [["TV-MA", 3030, 40.6], ["TV-14", 1810, 24.2], ["TV-PG", 736, 9.9], ["R", 551, 7.4], ["TV-Y7", 300, 4.0], ["TV-Y", 299, 4.0]]}, "q4_n": {"Antiguo": 1335, "Reciente": 7472}, "q5": [["Rajiv Chilaka", 22, 2, 22, 0, "Children & Family Movies"], ["Jan Suter", 21, 1, 21, 0, "Stand-Up Comedy"], ["Raúl Campos", 19, 1, 19, 0, "Stand-Up Comedy"], ["Marcus Raboy", 16, 3, 15, 1, "Stand-Up Comedy"], ["Suhas Kadav", 16, 3, 16, 0, "Children & Family Movies"], ["Jay Karas", 15, 4, 15, 0, "Stand-Up Comedy"], ["Cathy Garcia-Molina", 13, 4, 13, 0, "International Movies"], ["Jay Chapman", 12, 2, 12, 0, "Stand-Up Comedy"], ["Martin Scorsese", 12, 9, 12, 0, "Dramas"], ["Youssef Chahine", 12, 6, 12, 0, "Dramas"]], "q5_sin": null, "q6": [["United States", 3690, 42], ["India", 1046, 35], ["United Kingdom", 806, 37], ["Canada", 445, 37], ["France", 393, 35], ["Japan", 318, 35], ["Spain", 232, 32], ["South Korea", 231, 29], ["Germany", 226, 32], ["Mexico", 169, 31], ["China", 162, 31], ["Australia", 160, 36], ["Egypt", 117, 21], ["Turkey", 113, 21], ["Hong Kong", 105, 20], ["Nigeria", 103, 16], ["Italy", 100, 28], ["Brazil", 97, 27], ["Argentina", 91, 30], ["Belgium", 90, 22], ["Indonesia", 90, 21], ["Taiwan", 89, 24], ["Philippines", 83, 20], ["Thailand", 70, 25], ["South Africa", 62, 24], ["Colombia", 52, 18], ["Netherlands", 50, 21], ["Denmark", 48, 20], ["Ireland", 46, 21], ["Sweden", 42, 19], ["Poland", 41, 18], ["Singapore", 41, 22], ["United Arab Emirates", 37, 16], ["New Zealand", 33, 20], ["Lebanon", 31, 14], ["Israel", 30, 19], ["Norway", 30, 21], ["Chile", 29, 15], ["Russia", 27, 21], ["Malaysia", 26, 15], ["Pakistan", 24, 13], ["Czech Republic", 22, 22]], "q7": [["Movie", "International Movies", "TV-14", "India", 240], ["Movie", "Dramas", "R", "United States", 233], ["Movie", "Dramas", "TV-14", "India", 180], ["Movie", "Action & Adventure", "R", "United States", 147], ["Movie", "Children & Family Movies", "PG", "United States", 141], ["Movie", "Comedies", "PG-13", "United States", 132], ["Movie", "Dramas", "PG-13", "United States", 129], ["Movie", "Comedies", "R", "United States", 122], ["Movie", "Comedies", "PG", "United States", 120], ["Movie", "Action & Adventure", "PG-13", "United States", 117], ["Movie", "Comedies", "TV-14", "India", 116], ["Movie", "International Movies", "TV-MA", "India", 114], ["Movie", "Independent Movies", "R", "United States", 111], ["TV Show", "TV Dramas", "TV-MA", "United States", 98], ["Movie", "Thrillers", "R", "United States", 97]]};
+const fmt = n => Number(n).toLocaleString('es-AR');
+const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const $ = s => document.querySelector(s);
+
+/* ---------- tablas estáticas de los pasos ---------- */
+const REQ = [
+  ['¿Qué países tienen una mayor presencia en el catálogo de Netflix según el rango de fecha?','Cantidad de títulos por país','País, tiempo, tipo de contenido'],
+  ['¿Existe una relación entre el año de lanzamiento de un contenido y el tiempo que tardó en incorporarse al catálogo?','Año de lanzamiento, año de incorporación y tiempo transcurrido','Tiempo, tipo de contenido, país'],
+  ['¿Cómo se relacionan el país de producción, el género y el tipo de contenido?','Cantidad de títulos, % de participación, frecuencia de cada combinación','País, género, tipo de contenido'],
+  ['¿Qué características distinguen al contenido más antiguo del reciente en términos de género, duración, clasificación y país de origen?','Cantidad de títulos y duración promedio','Tiempo (antiguo/reciente), género, duración, clasificación, país, tipo'],
+  ['¿Qué directores aparecen con mayor frecuencia en el catálogo y en qué géneros y tipos de contenido participan principalmente?','Cantidad de títulos por director','Director, género, tipo de contenido'],
+  ['¿Los países que producen mayor cantidad de contenido también presentan una mayor diversidad de géneros?','Títulos por país y cantidad de géneros distintos','País, género, tiempo'],
+  ['¿Qué combinación de tipo de contenido, género, clasificación y país caracteriza a los contenidos más recientes del catálogo?','Frecuencia de las combinaciones','Tipo, género, clasificación, país']
+];
+$('#t-req').innerHTML = REQ.map((r,i)=>`<tr><td class="num">${i+1}</td><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+
+const PERFIL = [
+  ['show_id','texto','Identificador único de cada título',0],['type','texto','Movie o TV Show',0],['title','texto','Nombre de la película o serie',0],
+  ['director','texto','Uno o más directores, separados por coma',2634],['cast','texto','Elenco (no se usa en el modelo)',825],
+  ['country','texto','Uno o más países de producción, separados por coma',831],['date_added','fecha','Fecha de incorporación a Netflix (2008–2021)',10],
+  ['release_year','número','Año de estreno',0],['rating','texto','Clasificación de audiencia (TV-MA, PG-13, R…)',4],
+  ['duration','texto','Minutos (películas) o temporadas (series)',3],['listed_in','texto','Uno o más géneros, separados por coma',0],['description','texto','Sinopsis (no se usa en el modelo)',0]];
+$('#t-perfil').innerHTML = PERFIL.map(r=>`<tr><td><code>${r[0]}</code></td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${fmt(r[3])}</td></tr>`).join('');
+
+const IND = [['Cantidad de títulos','COUNT(DISTINCT show_id)'],['Tiempo transcurrido','AVG(YEAR(date_added) − release_year)'],['Frecuencia de combinación','COUNT(DISTINCT show_id) por combinación'],['% de participación','títulos del grupo ÷ títulos totales × 100'],['Diversidad de género','COUNT(DISTINCT id_genero)'],['Duración promedio','AVG(duración), separado por tipo']];
+$('#t-ind').innerHTML = IND.map(r=>`<tr><td>${r[0]}</td><td><code>${r[1]}</code></td></tr>`).join('');
+const GRAN = [['País','country','País individual'],['Tiempo','date_added, release_year','Año'],['Tipo de contenido','type','Movie / TV Show'],['Género','listed_in','Género individual'],['Director','director','Nombre individual'],['Clasificación','rating','Código sin cambios'],['Duración','duration','Número + unidad']];
+$('#t-gran').innerHTML = GRAN.map(r=>`<tr><td>${r[0]}</td><td><code>${r[1]}</code></td><td>${r[2]}</td></tr>`).join('');
+
+const CARGA = [['stg_netflix',8807,'staging'],['dim_tipo_contenido',2],['dim_clasificacion',15],['dim_pais',123],['dim_genero',43],['dim_director',4988],['dim_duracion',221],['dim_tiempo',75],['hechos_catalogo',25873]];
+$('#t-carga').innerHTML = CARGA.map(r=>`<tr><td><code>${r[0]}</code></td><td class="num">${fmt(r[1])}</td></tr>`).join('') + '<tr><td colspan="2" style="color:var(--ink-3);font-size:.82rem">Las dimensiones incluyen la fila "Sin dato".</td></tr>';
+
+/* ---------- diagrama estrella ---------- */
+const T = (name, cols, cls='') => `<div class="tbl ${cls}"><header>${name}</header><ul>${cols.map(c=>`<li>${c}</li>`).join('')}</ul></div>`;
+const pk = s => `<span class="pk">PK</span> ${s}`, fk = s => `<span class="fk">FK</span> ${s}`;
+$('#star').innerHTML = [
+  T('dim_pais',[pk('id_pais'),'nombre_pais']),
+  T('dim_tiempo',[pk('id_tiempo'),'anio','decada']),
+  T('dim_tipo_contenido',[pk('id_tipo'),'tipo_contenido']),
+  T('dim_genero',[pk('id_genero'),'nombre_genero']),
+  T('hechos_catalogo',[pk('show_id'),fk('id_pais'),fk('id_genero'),fk('id_director'),fk('id_tipo'),fk('id_clasificacion'),fk('id_duracion'),fk('id_tiempo_incorporacion'),fk('id_tiempo_lanzamiento'),'<em>— indicadores —</em>','frecuencia','anios_hasta_incorporacion','duracion_num'],'fact'),
+  T('dim_director',[pk('id_director'),'nombre_director']),
+  T('dim_clasificacion',[pk('id_clasificacion'),'codigo_rating']),
+  T('dim_duracion',[pk('id_duracion'),'duracion_original','duracion_num','duracion_unidad']),
+].join('');
+
+/* ---------- SQL ---------- */
+const SQL = {
+1:[`CREATE OR REPLACE VIEW pregunta1_paises AS
+SELECT p.nombre_pais     AS pais,
+       ti.anio           AS anio_incorporacion,
+       t.tipo_contenido  AS tipo,
+       COUNT(DISTINCT h.show_id) AS titulos
+FROM hechos_catalogo h
+JOIN dim_pais p           ON h.id_pais = p.id_pais
+JOIN dim_tiempo ti        ON h.id_tiempo_incorporacion = ti.id_tiempo
+JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
+WHERE p.nombre_pais <> 'Sin dato'
+  AND ti.anio IS NOT NULL
+GROUP BY p.nombre_pais, ti.anio, t.tipo_contenido
+ORDER BY titulos DESC;`,`SELECT pais, anio_incorporacion AS anio, SUM(titulos) AS titulos
+FROM pregunta1_paises
+WHERE anio_incorporacion BETWEEN 2015 AND 2021
+  AND pais IN (SELECT pais FROM (SELECT pais, SUM(titulos) AS total
+                                 FROM pregunta1_paises
+                                 GROUP BY pais
+                                 ORDER BY total DESC LIMIT 5) AS top5)
+GROUP BY pais, anio_incorporacion
+ORDER BY pais, anio;`],
+2:[`CREATE OR REPLACE VIEW pregunta2_lanzamiento_incorporacion AS
+SELECT DISTINCT h.show_id,
+       tl.anio            AS anio_lanzamiento,
+       t.tipo_contenido   AS tipo,
+       h.anios_hasta_incorporacion AS anios
+FROM hechos_catalogo h
+JOIN dim_tiempo tl        ON h.id_tiempo_lanzamiento = tl.id_tiempo
+JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
+WHERE h.anios_hasta_incorporacion IS NOT NULL;`,`SELECT CASE WHEN anios = 0  THEN '0 (mismo año)'
+            WHEN anios = 1  THEN '1 año'
+            WHEN anios <= 5 THEN '2 a 5 años'
+            WHEN anios <= 10 THEN '6 a 10 años'
+            WHEN anios <= 20 THEN '11 a 20 años'
+            ELSE 'Más de 20 años' END AS rango,
+       tipo,
+       COUNT(*) AS titulos
+FROM pregunta2_lanzamiento_incorporacion
+GROUP BY rango, tipo;`],
+3:[`CREATE OR REPLACE VIEW pregunta3_pais_genero_tipo AS
+SELECT p.nombre_pais     AS pais,
+       g.nombre_genero   AS genero,
+       t.tipo_contenido  AS tipo,
+       COUNT(DISTINCT h.show_id) AS titulos,
+       ROUND(COUNT(DISTINCT h.show_id) * 100 /
+             (SELECT COUNT(DISTINCT show_id) FROM hechos_catalogo), 2) AS porcentaje
+FROM hechos_catalogo h
+JOIN dim_pais p           ON h.id_pais = p.id_pais
+JOIN dim_genero g         ON h.id_genero = g.id_genero
+JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
+WHERE p.nombre_pais <> 'Sin dato'
+GROUP BY p.nombre_pais, g.nombre_genero, t.tipo_contenido
+ORDER BY titulos DESC;`,`SELECT pais, genero, tipo, titulos, porcentaje
+FROM pregunta3_pais_genero_tipo
+ORDER BY titulos DESC
+LIMIT 10;`],
+4:[`CREATE OR REPLACE VIEW pregunta4_antiguo_reciente AS
+SELECT DISTINCT h.show_id,
+       CASE WHEN tl.anio < 2010 THEN 'Antiguo' ELSE 'Reciente' END AS grupo,
+       t.tipo_contenido   AS tipo,
+       g.nombre_genero    AS genero,
+       c.codigo_rating    AS clasificacion,
+       p.nombre_pais      AS pais,
+       h.duracion_num     AS duracion
+FROM hechos_catalogo h
+JOIN dim_tiempo tl        ON h.id_tiempo_lanzamiento = tl.id_tiempo
+JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
+JOIN dim_genero g         ON h.id_genero = g.id_genero
+JOIN dim_clasificacion c  ON h.id_clasificacion = c.id_clasificacion
+JOIN dim_pais p           ON h.id_pais = p.id_pais;`,`SELECT grupo, tipo,
+       COUNT(*)                AS titulos,
+       ROUND(AVG(duracion), 1) AS duracion_promedio
+FROM (SELECT DISTINCT show_id, grupo, tipo, duracion
+      FROM pregunta4_antiguo_reciente) AS t
+GROUP BY grupo, tipo
+ORDER BY grupo, tipo;`],
+5:[`CREATE OR REPLACE VIEW pregunta5_directores AS
+SELECT d.nombre_director  AS director,
+       t.tipo_contenido   AS tipo,
+       g.nombre_genero    AS genero,
+       h.show_id
+FROM hechos_catalogo h
+JOIN dim_director d       ON h.id_director = d.id_director
+JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
+JOIN dim_genero g         ON h.id_genero = g.id_genero
+WHERE d.nombre_director <> 'Sin dato';`,`SELECT director,
+       COUNT(DISTINCT show_id) AS titulos,
+       COUNT(DISTINCT genero)  AS generos_distintos,
+       COUNT(DISTINCT CASE WHEN tipo = 'Movie'   THEN show_id END) AS peliculas,
+       COUNT(DISTINCT CASE WHEN tipo = 'TV Show' THEN show_id END) AS series
+FROM pregunta5_directores
+GROUP BY director
+ORDER BY titulos DESC, director
+LIMIT 10;`],
+6:[`CREATE OR REPLACE VIEW pregunta6_diversidad_generos AS
+SELECT p.nombre_pais  AS pais,
+       COUNT(DISTINCT h.show_id)   AS titulos,
+       COUNT(DISTINCT h.id_genero) AS generos_distintos
+FROM hechos_catalogo h
+JOIN dim_pais p ON h.id_pais = p.id_pais
+WHERE p.nombre_pais <> 'Sin dato'
+GROUP BY p.nombre_pais
+HAVING COUNT(DISTINCT h.show_id) >= 20
+ORDER BY titulos DESC;`,`SELECT pais, titulos, generos_distintos
+FROM pregunta6_diversidad_generos
+ORDER BY generos_distintos DESC, titulos DESC;`],
+7:[`CREATE OR REPLACE VIEW pregunta7_combinaciones_recientes AS
+SELECT t.tipo_contenido  AS tipo,
+       g.nombre_genero   AS genero,
+       c.codigo_rating   AS clasificacion,
+       p.nombre_pais     AS pais,
+       COUNT(DISTINCT h.show_id) AS titulos
+FROM hechos_catalogo h
+JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
+JOIN dim_genero g         ON h.id_genero = g.id_genero
+JOIN dim_clasificacion c  ON h.id_clasificacion = c.id_clasificacion
+JOIN dim_pais p           ON h.id_pais = p.id_pais
+JOIN dim_tiempo ti        ON h.id_tiempo_incorporacion = ti.id_tiempo
+WHERE ti.anio >= 2019
+  AND p.nombre_pais <> 'Sin dato'
+GROUP BY t.tipo_contenido, g.nombre_genero, c.codigo_rating, p.nombre_pais
+ORDER BY titulos DESC
+LIMIT 15;`,`SELECT tipo, genero, clasificacion, pais, titulos
+FROM pregunta7_combinaciones_recientes
+ORDER BY titulos DESC;`]};
+const KW = /\b(CREATE|OR|REPLACE|VIEW|AS|SELECT|DISTINCT|FROM|JOIN|ON|WHERE|AND|IS|NOT|NULL|GROUP|BY|ORDER|DESC|LIMIT|HAVING|CASE|WHEN|THEN|ELSE|END|IN|BETWEEN|COUNT|SUM|AVG|ROUND)\b/g;
+const hl = s => esc(s).replace(KW,'<span class="kw">$1</span>');
+
+/* ---------- preguntas ---------- */
+const Q = [
+ {n:1,q:REQ[0][0],ind:['Cantidad de títulos'],per:['País','Tiempo','Tipo'],
+  ans:'Estados Unidos es el país con más títulos incorporados entre 2015 y 2021 (3 633), seguido por India (1 046) y Reino Unido (800). Estados Unidos tuvo su pico en 2019 con 856 títulos. India creció muy rápido hasta 2018 (349) y después bajó. En casi todos los países predominan las películas; Corea del Sur y Japón son la excepción, con más series.'},
+ {n:2,q:REQ[1][0],ind:['Tiempo transcurrido'],per:['Tiempo','Tipo'],
+  ans:'Sí. Cuanto más reciente es el lanzamiento, menos tarda en llegar a Netflix: los títulos de la década de 1960 tardaron más de 50 años y los de 2020 casi ninguno. El 55 % se incorporó el mismo año o al siguiente. Las series llegan más rápido (2,3 años en promedio) que las películas (5,7). Parte de la relación es esperable, porque todas las incorporaciones ocurren entre 2008 y 2021.'},
+ {n:3,q:REQ[2][0],ind:['Cantidad de títulos','% de participación'],per:['País','Género','Tipo'],
+  ans:'Las combinaciones más frecuentes son películas: India + International Movies (864 títulos, 9,81 % del catálogo) y Estados Unidos + Dramas (835, 9,48 %). Estados Unidos domina las películas de género (comedia, documental, acción, infantil). En series aparecen otros países: Reino Unido con British TV Shows, y Japón y Corea del Sur con series internacionales, anime y Korean TV Shows.'},
+ {n:4,q:REQ[3][0],ind:['Cantidad de títulos','Duración promedio'],per:['Tiempo','Género','Clasificación','Tipo'],
+  ans:'El contenido antiguo (estrenado antes de 2010) es casi todo película (86 %) y sus películas duran más: 113 minutos contra 96 de las recientes. Lo reciente suma muchas más series (33 %), gana peso la clasificación adulta TV-MA (41 % contra 13 %) y aparecen documentales y series internacionales entre los géneros principales.'},
+ {n:5,q:REQ[4][0],ind:['Cantidad de títulos'],per:['Director','Género','Tipo'],
+  ans:'El director con más títulos es Rajiv Chilaka (22), seguido por Jan Suter (21) y Raúl Campos (19). Nueve de los diez dirigen solo películas. Se concentran en dos nichos: especiales de stand-up y animación infantil. Martin Scorsese es la excepción por variedad: 12 títulos en 9 géneros. 2 634 títulos no informan director.'},
+ {n:6,q:REQ[5][0],ind:['Cantidad de títulos','Diversidad de género'],per:['País','Género'],
+  ans:'En general sí: entre los 42 países con al menos 20 títulos, los que tienen más títulos cubren más géneros. Estados Unidos llega a 42, y Reino Unido y Canadá a 37. Pero la relación no es lineal: Australia tiene 36 géneros con solo 160 títulos, y República Checa 22 géneros en 22 títulos.'},
+ {n:7,q:REQ[6][0],ind:['Frecuencia de combinación'],per:['Tipo','Género','Clasificación','País'],
+  ans:'Entre lo incorporado desde 2019, la combinación más frecuente es película · International Movies · TV-14 · India (240 títulos), seguida por película · Dramas · R · Estados Unidos (233). De las 15 combinaciones principales, 14 son películas y todas son de Estados Unidos o India. La única serie es TV Dramas · TV-MA · Estados Unidos.'}
+];
+
+const qs = $('#questions');
+$('#qnav').innerHTML = Q.map(q=>`<a href="#q${q.n}" data-q="${q.n}">P${q.n}</a>`).join('');
+qs.innerHTML = Q.map(q=>`
+<article class="panel q" id="q${q.n}">
+  <div class="qhead">
+    <span class="eyebrow">Pregunta ${q.n} · vista ${['pregunta1_paises','pregunta2_lanzamiento_incorporacion','pregunta3_pais_genero_tipo','pregunta4_antiguo_reciente','pregunta5_directores','pregunta6_diversidad_generos','pregunta7_combinaciones_recientes'][q.n-1]}</span>
+    <h3 style="font-size:1.25rem">${q.q}</h3>
+    <div class="chips">${q.ind.map(i=>`<span class="chip ind">${i}</span>`).join('')}${q.per.map(p=>`<span class="chip">${p}</span>`).join('')}</div>
+  </div>
+  <div id="ctl${q.n}" class="toolbar"></div>
+  <div id="body${q.n}" style="display:flex;flex-direction:column;gap:16px;min-width:0"></div>
+  <p class="answer">${q.ans}</p>
+  <details><summary>Consulta SQL</summary><div>
+    <p style="font-size:.85rem;color:var(--ink-3)">Vista en el modelo estrella</p><pre>${hl(SQL[q.n][0])}</pre>
+    <p style="font-size:.85rem;color:var(--ink-3)">Consulta del tablero</p><pre>${hl(SQL[q.n][1])}</pre>
+  </div></details>
+  <details><summary>Tabla de resultados</summary><div><div class="tw" id="tab${q.n}"></div></div></details>
+</article>`).join('');
+document.querySelectorAll('#qnav a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();document.getElementById('q'+a.dataset.q).scrollIntoView({behavior:'smooth',block:'start'})}));
+
+const table = (head, rows, numCols=[]) => `<table><thead><tr>${head.map((h,i)=>`<th class="${numCols.includes(i)?'num':''}">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${numCols.includes(i)?'num':''}">${typeof c==='number'?fmt(c):esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const seg = (id, opts, cur) => `<div class="seg" role="group" id="${id}">${opts.map(o=>`<button type="button" data-v="${o[0]}" aria-pressed="${o[0]===cur}">${o[1]}</button>`).join('')}</div>`;
+const legend = items => `<div class="legend">${items.map(i=>`<span><i style="background:${i[1]}"></i>${i[0]}</span>`).join('')}</div>`;
+const box = (id, tall) => `<div class="chartbox ${tall?'tall':''}"><canvas id="${id}" role="img" aria-label="Gráfico"></canvas></div>`;
+
+/* ---------- Chart.js ---------- */
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const charts = {};
+function base(){
+  const ink2 = css('--ink-2'), ink3 = css('--ink-3'), line = css('--line');
+  Chart.defaults.font.family = '"Public Sans", system-ui, sans-serif';
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = ink2;
+  Chart.defaults.borderColor = line;
+  Chart.defaults.plugins.legend.display = false;
+  Chart.defaults.plugins.tooltip.backgroundColor = css('--ink');
+  Chart.defaults.plugins.tooltip.titleColor = css('--surface');
+  Chart.defaults.plugins.tooltip.bodyColor = css('--surface');
+  Chart.defaults.plugins.tooltip.padding = 10;
+  Chart.defaults.plugins.tooltip.cornerRadius = 6;
+  Chart.defaults.maintainAspectRatio = false;
+  Chart.defaults.animation = matchMedia('(prefers-reduced-motion: reduce)').matches ? false : {duration:400};
+  return {ink3, line};
+}
+function make(id, cfg){ if(charts[id]) charts[id].destroy(); charts[id] = new Chart(document.getElementById(id), cfg); }
+const grid = () => ({color: css('--line'), drawTicks:false});
+const S = () => ({movie:css('--s1'), tv:css('--s2'), c:[css('--s1'),css('--s2'),css('--s3'),css('--s4'),css('--s5')], old:css('--s7'), rec:css('--s3')});
+const barOpts = {borderRadius:4, borderSkipped:'start', borderWidth:0};
+
+const state = {q1:'Todos', q3:'Movie'};
+const render = {
+ 1(){
+  const s=S(); const top5=D.q1.paises.slice(0,5), yrs=D.q1.anios;
+  $('#ctl1').innerHTML = seg('s1',[['Todos','Todos'],['Movie','Películas'],['TV Show','Series']],state.q1) + legend(top5.map((p,i)=>[p,s.c[i]]));
+  const val=(p,y)=>D.q1.rows.filter(r=>r[0]===p&&r[1]===y&&(state.q1==='Todos'||r[2]===state.q1)).reduce((a,r)=>a+r[3],0);
+  $('#body1').innerHTML = box('c1');
+  make('c1',{type:'line',data:{labels:yrs,datasets:top5.map((p,i)=>({label:p,data:yrs.map(y=>val(p,y)),borderColor:s.c[i],backgroundColor:s.c[i],borderWidth:2,pointRadius:4,pointHoverRadius:6,tension:0}))},
+   options:{interaction:{mode:'index',intersect:false},scales:{y:{beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos incorporados'}},x:{grid:{display:false}}}}});
+  const rows = top5.map(p=>{const v=yrs.map(y=>val(p,y));return [p,...v,v.reduce((a,b)=>a+b,0)]});
+  $('#tab1').innerHTML = table(['País',...yrs,'Total'],rows,[1,2,3,4,5,6,7,8]);
+  bindSeg('s1',v=>{state.q1=v;render[1]()});
+ },
+ 2(){
+  const s=S();
+  $('#ctl2').innerHTML = legend([['Películas',s.movie],['Series',s.tv]]);
+  $('#body2').innerHTML = `<div class="kpis"><div class="kpi"><b>4,7</b><span>años promedio hasta incorporarse</span></div><div class="kpi"><b>54,9 %</b><span>se incorporó en 1 año o menos</span></div><div class="kpi"><b>15,3 %</b><span>tardó 10 años o más</span></div><div class="kpi"><b>8 783</b><span>títulos con dato válido</span></div></div>
+   <div class="grid2"><div style="min-width:0"><p style="font-weight:600;margin-bottom:6px">Títulos según años hasta incorporarse</p>${box('c2a')}</div><div style="min-width:0"><p style="font-weight:600;margin-bottom:6px">Años promedio según década de lanzamiento</p>${box('c2b')}</div></div>`;
+  const R=D.q2_rango;
+  make('c2a',{type:'bar',data:{labels:R.map(r=>r[0]==='0'?'Mismo año':r[0]==='1'?'1 año':r[0]+' años'),datasets:[{label:'Películas',data:R.map(r=>r[1]),backgroundColor:s.movie,...barOpts},{label:'Series',data:R.map(r=>r[2]),backgroundColor:s.tv,...barOpts}]},
+   options:{datasets:{bar:{categoryPercentage:.7,barPercentage:.92}},scales:{y:{beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos'}},x:{grid:{display:false}}}}});
+  const decs=[...new Set(D.q2_dec.map(r=>r[0]))];
+  const dv=t=>decs.map(d=>{const r=D.q2_dec.find(x=>x[0]===d&&x[1]===t);return r?r[2]:null});
+  make('c2b',{type:'line',data:{labels:decs.map(d=>d+'s'),datasets:[{label:'Películas',data:dv('Movie'),borderColor:s.movie,backgroundColor:s.movie,borderWidth:2,pointRadius:4},{label:'Series',data:dv('TV Show'),borderColor:s.tv,backgroundColor:s.tv,borderWidth:2,pointRadius:4}]},
+   options:{interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y} años`}}},scales:{y:{beginAtZero:true,grid:grid(),title:{display:true,text:'Años promedio'}},x:{grid:{display:false}}}}});
+  $('#tab2').innerHTML = table(['Años hasta incorporarse','Películas','Series','Total'],R.map(r=>[r[0]==='0'?'0 (mismo año)':r[0]==='1'?'1 año':r[0]+' años',r[1],r[2],r[1]+r[2]]),[1,2,3])
+   + table(['Tipo','Títulos','Promedio (años)','Mediana (años)'],D.q2_res.map(r=>[r[0]==='Movie'?'Películas':'Series',r[1],String(r[2]).replace('.',','),String(r[3]).replace('.',',')]),[1,2,3]);
+ },
+ 3(){
+  const s=S(); const rows=D.q3[state.q3]; const col=state.q3==='Movie'?s.movie:s.tv;
+  $('#ctl3').innerHTML = seg('s3',[['Movie','Películas'],['TV Show','Series']],state.q3) + `<span style="font-size:.84rem;color:var(--ink-3)">% sobre el total de títulos del catálogo</span>`;
+  $('#body3').innerHTML = box('c3',true);
+  make('c3',{type:'bar',data:{labels:rows.map(r=>r[0]+' · '+r[1]),datasets:[{label:'% del catálogo',data:rows.map(r=>r[3]),backgroundColor:col,...barOpts}]},
+   options:{indexAxis:'y',plugins:{tooltip:{callbacks:{label:c=>`${fmt(rows[c.dataIndex][2])} títulos · ${String(c.parsed.x).replace('.',',')} %`}}},scales:{x:{beginAtZero:true,grid:grid(),title:{display:true,text:'% del catálogo'}},y:{grid:{display:false}}}}});
+  $('#tab3').innerHTML = table(['País','Género','Títulos','%'],rows.map(r=>[r[0],r[1],r[2],String(r[3]).replace('.',',')]),[2,3]);
+  bindSeg('s3',v=>{state.q3=v;render[3]()});
+ },
+ 4(){
+  const s=S(); const t=D.q4_tipo; const g=(gr,tp)=>t.find(r=>r[0]===gr&&r[1]===tp);
+  const n=D.q4_n;
+  $('#ctl4').innerHTML = legend([['Antiguo (antes de 2010) · '+fmt(n.Antiguo)+' títulos',s.old],['Reciente (2010 en adelante) · '+fmt(n.Reciente)+' títulos',s.rec]]);
+  const pctTV = gr => (g(gr,'TV Show')[2]/n[gr]*100).toFixed(1).replace('.',',');
+  $('#body4').innerHTML = `<div class="tw"><table><thead><tr><th>Característica</th><th class="num">Antiguo</th><th class="num">Reciente</th></tr></thead><tbody>
+    <tr><td>Series sobre el total</td><td class="num">${pctTV('Antiguo')} %</td><td class="num">${pctTV('Reciente')} %</td></tr>
+    <tr><td>Duración promedio de películas</td><td class="num">${String(g('Antiguo','Movie')[3]).replace('.',',')} min</td><td class="num">${String(g('Reciente','Movie')[3]).replace('.',',')} min</td></tr>
+    <tr><td>Temporadas promedio de series</td><td class="num">${String(g('Antiguo','TV Show')[3]).replace('.',',')}</td><td class="num">${String(g('Reciente','TV Show')[3]).replace('.',',')}</td></tr>
+    <tr><td>Clasificación más frecuente</td><td class="num">${D.q4_rat.Antiguo[0][0]}</td><td class="num">${D.q4_rat.Reciente[0][0]}</td></tr></tbody></table></div>
+   <div class="grid2"><div style="min-width:0"><p style="font-weight:600;margin-bottom:6px">Géneros principales (% de títulos del grupo)</p>${box('c4a',true)}</div><div style="min-width:0"><p style="font-weight:600;margin-bottom:6px">Clasificación (% de títulos del grupo)</p>${box('c4b',true)}</div></div>`;
+  const two=(id,obj)=>{const labels=[...new Set([...obj.Antiguo.map(r=>r[0]),...obj.Reciente.map(r=>r[0])])];
+   const v=gr=>labels.map(l=>{const r=obj[gr].find(x=>x[0]===l);return r?r[2]:null});
+   make(id,{type:'bar',data:{labels,datasets:[{label:'Antiguo',data:v('Antiguo'),backgroundColor:s.old,...barOpts},{label:'Reciente',data:v('Reciente'),backgroundColor:s.rec,...barOpts}]},
+    options:{indexAxis:'y',datasets:{bar:{categoryPercentage:.75,barPercentage:.92}},plugins:{tooltip:{callbacks:{label:c=>c.parsed.x==null?`${c.dataset.label}: fuera del top 6`:`${c.dataset.label}: ${String(c.parsed.x).replace('.',',')} %`}}},scales:{x:{beginAtZero:true,grid:grid(),title:{display:true,text:'% del grupo'}},y:{grid:{display:false}}}}});};
+  two('c4a',D.q4_gen); two('c4b',D.q4_rat);
+  $('#tab4').innerHTML = table(['Grupo','Tipo','Títulos','Duración promedio','Unidad'],t.map(r=>[r[0],r[1],r[2],String(r[3]).replace('.',','),r[1]==='Movie'?'minutos':'temporadas']),[2,3]);
+ },
+ 5(){
+  const s=S(); const r=D.q5;
+  $('#ctl5').innerHTML = legend([['Películas',s.movie],['Series',s.tv]]);
+  $('#body5').innerHTML = box('c5',true);
+  make('c5',{type:'bar',data:{labels:r.map(x=>x[0]),datasets:[{label:'Películas',data:r.map(x=>x[3]),backgroundColor:s.movie,...barOpts,borderSkipped:false,borderRadius:0},{label:'Series',data:r.map(x=>x[4]),backgroundColor:s.tv,...barOpts,borderSkipped:false,borderRadius:0}]},
+   options:{indexAxis:'y',scales:{x:{stacked:true,beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos'}},y:{stacked:true,grid:{display:false}}},
+    plugins:{tooltip:{callbacks:{afterBody:c=>`${r[c[0].dataIndex][2]} géneros · principal: ${r[c[0].dataIndex][5]}`}}}}});
+  $('#tab5').innerHTML = table(['Director','Títulos','Géneros','Películas','Series','Género principal'],r,[1,2,3,4]);
+ },
+ 6(){
+  const s=S(); const r=D.q6;
+  $('#ctl6').innerHTML = `<span style="font-size:.84rem;color:var(--ink-3)">Cada punto es un país con al menos 20 títulos. Eje horizontal en escala logarítmica.</span>`;
+  $('#body6').innerHTML = box('c6',true);
+  const lab = new Set(['United States','India','United Kingdom','Canada','Australia','Japan','Nigeria','Czech Republic','Argentina','Egypt']);
+  const labelPlugin={id:'lbl',afterDatasetsDraw(ch){const {ctx}=ch;ctx.save();ctx.font='11px "Public Sans", sans-serif';ctx.fillStyle=css('--ink-2');
+    ch.getDatasetMeta(0).data.forEach((pt,i)=>{if(lab.has(r[i][0])){ctx.fillText(r[i][0],pt.x+8,pt.y-6)}});ctx.restore();}};
+  make('c6',{type:'scatter',data:{datasets:[{label:'Países',data:r.map(x=>({x:x[1],y:x[2]})),backgroundColor:s.movie,borderColor:css('--surface'),borderWidth:2,pointRadius:6,pointHoverRadius:8}]},
+   options:{layout:{padding:{right:70}},plugins:{tooltip:{callbacks:{label:c=>`${r[c.dataIndex][0]}: ${fmt(c.parsed.x)} títulos, ${c.parsed.y} géneros`}}},
+    scales:{x:{type:'logarithmic',grid:grid(),title:{display:true,text:'Títulos (escala logarítmica)'},ticks:{callback:v=>[20,50,100,200,500,1000,2000,5000].includes(v)?fmt(v):''}},y:{grid:grid(),title:{display:true,text:'Géneros distintos'},suggestedMin:10}}},plugins:[labelPlugin]});
+  $('#tab6').innerHTML = table(['País','Títulos','Géneros distintos'],[...r].sort((a,b)=>b[2]-a[2]||b[1]-a[1]),[1,2]);
+ },
+ 7(){
+  const s=S(); const r=D.q7;
+  $('#ctl7').innerHTML = legend([['Películas',s.movie],['Series',s.tv]]);
+  $('#body7').innerHTML = box('c7',true);
+  make('c7',{type:'bar',data:{labels:r.map(x=>`${x[3]} · ${x[1]} · ${x[2]}`),datasets:[{label:'Títulos',data:r.map(x=>x[4]),backgroundColor:r.map(x=>x[0]==='Movie'?s.movie:s.tv),...barOpts}]},
+   options:{indexAxis:'y',plugins:{tooltip:{callbacks:{label:c=>`${r[c.dataIndex][0]==='Movie'?'Película':'Serie'} · ${c.parsed.x} títulos`}}},scales:{x:{beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos incorporados desde 2019'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
+  $('#tab7').innerHTML = table(['Tipo','Género','Clasificación','País','Títulos'],r,[4]);
+ }
+};
+function bindSeg(id, fn){ document.querySelectorAll('#'+id+' button').forEach(b=>b.addEventListener('click',()=>fn(b.dataset.v))); }
+let built=false;
+function buildBoard(){ if(typeof Chart==='undefined'){ qs.insertAdjacentHTML('afterbegin','<p class="answer">No se pudo cargar la librería de gráficos. Las tablas siguen disponibles.</p>'); return; } base(); for(let i=1;i<=7;i++){ try{render[i]()}catch(e){console.error(e)} } built=true; }
+
+/* ---------- navegación ---------- */
+const VIEWS=['inicio','paso1','paso2','paso3','paso4','tablero','conclusiones'];
+function show(v, push=true){
+  if(!VIEWS.includes(v)) v='inicio';
+  VIEWS.forEach(x=>document.getElementById('v-'+x).hidden = x!==v);
+  document.querySelectorAll('nav.steps button').forEach(b=>b.setAttribute('aria-current', b.dataset.go===v));
+  if(v==='tablero' && !built) buildBoard();
+  if(push){ try{history.replaceState(null,'','#'+v)}catch(e){} window.scrollTo({top:0}); }
+  try{localStorage.setItem('dwnetflix-view',v)}catch(e){}
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+let start = (location.hash||'').slice(1);
+if(!VIEWS.includes(start)){ try{start=localStorage.getItem('dwnetflix-view')||'inicio'}catch(e){start='inicio'} }
+show(start,false);
+const rerender=()=>{ if(built){ base(); for(let i=1;i<=7;i++){ try{render[i]()}catch(e){} } } };
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',rerender);
+new MutationObserver(rerender).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+</script>
+
+</body>
+</html>

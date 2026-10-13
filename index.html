@@ -178,7 +178,7 @@ ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;
     <div class="head">
       <span class="eyebrow">Data Warehouse · Catálogo de Netflix</span>
       <h1>Cómo se compone y evoluciona el catálogo de Netflix</h1>
-      <p class="lede">Construimos un Data Mart con modelo estrella a partir de 8 807 películas y series, siguiendo los cuatro pasos de la metodología Hefesto. El tablero responde las siete preguntas de negocio con consultas SQL sobre el modelo, no sobre el archivo original.</p>
+      <p class="lede">Construimos un Data Mart con modelo estrella a partir de 8 807 películas y series, siguiendo los cuatro pasos de la metodología Hefesto. El tablero responde cinco preguntas de negocio con consultas SQL sobre el modelo, no sobre el archivo original.</p>
     </div>
     <div class="kpis">
       <div class="kpi"><b>8 807</b><span>títulos en el catálogo</span></div>
@@ -383,7 +383,7 @@ ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;
   <section class="view" id="v-tablero" hidden>
     <div class="head">
       <span class="eyebrow">Explotación del Data Mart</span>
-      <h2>Tablero: las siete preguntas</h2>
+      <h2>Tablero: las cinco preguntas</h2>
       <p class="lede">Cada respuesta sale de una vista creada sobre el modelo estrella en <code>dw_netflix</code>. Abajo de cada gráfico están la consulta SQL y la tabla de resultados.</p>
       <p><a href="dashboard.html" style="color:var(--accent);font-weight:600">Ver el dashboard.md generado en JupyterLab →</a></p>
     </div>
@@ -398,12 +398,12 @@ ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;
       <h2>Conclusiones</h2>
     </div>
     <div class="grid2">
-      <div class="panel"><h3>Un catálogo mayoritariamente estadounidense</h3><p>Estados Unidos aparece en 3 690 títulos, más de tres veces que India (1 046), el segundo. Igual, India lidera la combinación más frecuente del catálogo: películas internacionales.</p></div>
-      <div class="panel"><h3>Cada vez más estrenos</h3><p>El 55 % de los títulos llegó a Netflix el mismo año de su estreno o al siguiente. Las series se incorporan antes (2,3 años en promedio) que las películas (5,7).</p></div>
-      <div class="panel"><h3>Lo reciente es más corto y más adulto</h3><p>Frente al contenido anterior a 2010, lo reciente tiene más series (33 % contra 14 %), películas 17 minutos más cortas y mayor peso de la clasificación TV-MA (41 % contra 13 %).</p></div>
-      <div class="panel"><h3>Volumen y diversidad van juntos</h3><p>Los países con más títulos cubren más géneros: Estados Unidos llega a 42. Aun así, hay catálogos chicos muy variados, como República Checa con 22 géneros en 22 títulos.</p></div>
-      <div class="panel"><h3>Directores de nicho</h3><p>Los directores más frecuentes producen muchos títulos de un mismo formato, sobre todo especiales de stand-up y animación infantil, y casi exclusivamente películas.</p></div>
-      <div class="panel"><h3>El modelo responde todo</h3><p>Las siete preguntas se resolvieron con una vista sobre la tabla de hechos y sus dimensiones, contando títulos distintos para no inflar resultados por la granularidad.</p></div>
+      <div class="panel"><h3>Un catálogo mayoritariamente estadounidense</h3><p>Estados Unidos aparece en 3 690 títulos, más de tres veces que India (1 046), el segundo. Entre 2015 y 2021 incorporó 3 633 títulos, con su pico en 2019.</p></div>
+      <div class="panel"><h3>Cada vez más estrenos</h3><p>El 37 % de los títulos llegó a Netflix el mismo año de su estreno (55 % si se suma el año siguiente). Las series se incorporan antes que las películas, que tienen una cola larga de títulos antiguos.</p></div>
+      <div class="panel"><h3>Lo reciente es más corto</h3><p>Frente al contenido anterior a 2010, lo reciente tiene más series (33 % contra 14 %), películas 17 minutos más cortas y series con menos temporadas (1,7 contra 2,3). El género principal pasa de Drama a Películas Internacionales.</p></div>
+      <div class="panel"><h3>Volumen y diversidad van juntos</h3><p>Los países con más títulos cubren más géneros: Estados Unidos llega a 42. Aun así, hay catálogos chicos muy variados. Los países dominantes presentan mucha variedad en género.</p></div>
+      <div class="panel"><h3>Directores de películas</h3><p>De los 10 directores con más títulos, todos menos Marcus Raboy dirigen únicamente películas: la dirección acreditada se especializa en ese tipo de contenido.</p></div>
+      <div class="panel"><h3>El modelo responde todo</h3><p>Las cinco preguntas se resolvieron con una vista sobre la tabla de hechos y sus dimensiones, contando títulos distintos para no inflar resultados por la granularidad.</p></div>
     </div>
   </section>
   </main>
@@ -411,7 +411,7 @@ ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const D = {"q1": {"paises": ["United States", "India", "United Kingdom", "Canada", "France", "Japan", "Spain", "South Korea"], "anios": [2015, 2016, 2017, 2018, 2019, 2020, 2021], "rows": [["United States", 2019, "Movie", 678], ["United States", 2020, "Movie", 582], ["United States", 2018, "Movie", 455], ["United States", 2021, "Movie", 452], ["United States", 2017, "Movie", 364], ["India", 2018, "Movie", 332], ["United States", 2020, "TV Show", 246], ["India", 2019, "Movie", 200], ["India", 2020, "Movie", 181], ["United States", 2019, "TV Show", 178], ["United States", 2021, "TV Show", 175], ["India", 2017, "Movie", 148], ["United States", 2018, "TV Show", 145], ["United States", 2016, "Movie", 139], ["United Kingdom", 2019, "Movie", 131], ["United Kingdom", 2018, "Movie", 103], ["United States", 2017, "TV Show", 98], ["United Kingdom", 2020, "Movie", 97], ["India", 2021, "Movie", 88], ["United Kingdom", 2021, "Movie", 83], ["United Kingdom", 2017, "Movie", 81], ["Canada", 2020, "Movie", 79], ["France", 2020, "Movie", 74], ["United States", 2016, "TV Show", 64], ["Canada", 2018, "Movie", 62], ["Canada", 2019, "Movie", 62], ["France", 2019, "Movie", 61], ["United Kingdom", 2019, "TV Show", 60], ["Canada", 2017, "Movie", 54], ["United Kingdom", 2017, "TV Show", 53], ["France", 2021, "Movie", 49], ["United Kingdom", 2020, "TV Show", 49], ["France", 2018, "Movie", 48], ["Japan", 2020, "TV Show", 48], ["France", 2017, "Movie", 47], ["Japan", 2019, "TV Show", 45], ["South Korea", 2019, "TV Show", 45], ["South Korea", 2020, "TV Show", 44], ["United Kingdom", 2018, "TV Show", 44], ["Canada", 2021, "Movie", 41], ["United States", 2015, "Movie", 41], ["Spain", 2017, "Movie", 37], ["Spain", 2018, "Movie", 37], ["United Kingdom", 2021, "TV Show", 37], ["Spain", 2019, "Movie", 36], ["South Korea", 2017, "TV Show", 32], ["United Kingdom", 2016, "Movie", 32], ["Canada", 2020, "TV Show", 31], ["Japan", 2018, "TV Show", 31], ["Japan", 2020, "Movie", 31], ["Japan", 2019, "Movie", 29], ["Japan", 2021, "TV Show", 29], ["Spain", 2020, "Movie", 26], ["Japan", 2016, "TV Show", 24], ["Japan", 2021, "Movie", 24], ["France", 2020, "TV Show", 23], ["Canada", 2019, "TV Show", 22], ["United Kingdom", 2016, "TV Show", 22], ["South Korea", 2021, "TV Show", 21], ["Spain", 2021, "Movie", 21], ["Japan", 2017, "TV Show", 20], ["Canada", 2018, "TV Show", 19], ["Canada", 2021, "TV Show", 18], ["France", 2019, "TV Show", 18], ["India", 2019, "TV Show", 18], ["India", 2020, "TV Show", 18], ["South Korea", 2018, "TV Show", 18], ["Canada", 2017, "TV Show", 17], ["India", 2018, "TV Show", 17], ["India", 2021, "TV Show", 17], ["Japan", 2017, "Movie", 17], ["Spain", 2019, "TV Show", 17], ["Spain", 2020, "TV Show", 17], ["Canada", 2016, "Movie", 16], ["France", 2016, "Movie", 16], ["France", 2018, "TV Show", 16], ["United States", 2015, "TV Show", 16], ["South Korea", 2018, "Movie", 15], ["Canada", 2016, "TV Show", 14], ["India", 2017, "TV Show", 14], ["South Korea", 2019, "Movie", 14], ["France", 2016, "TV Show", 13], ["India", 2016, "Movie", 13], ["Japan", 2018, "Movie", 13], ["Spain", 2016, "Movie", 13], ["South Korea", 2020, "Movie", 12], ["Spain", 2021, "TV Show", 12], ["France", 2021, "TV Show", 11], ["South Korea", 2017, "Movie", 11], ["South Korea", 2016, "TV Show", 10], ["South Korea", 2021, "Movie", 8], ["France", 2015, "Movie", 6], ["France", 2017, "TV Show", 6], ["Spain", 2018, "TV Show", 6], ["Japan", 2016, "Movie", 5], ["Spain", 2017, "TV Show", 5], ["United Kingdom", 2015, "TV Show", 5], ["Spain", 2016, "TV Show", 4], ["Canada", 2015, "Movie", 3], ["Canada", 2015, "TV Show", 3], ["France", 2015, "TV Show", 3], ["United Kingdom", 2015, "Movie", 3], ["Japan", 2015, "TV Show", 1], ["South Korea", 2016, "Movie", 1]]}, "q2_rango": [["0", 1862, 1379], ["1", 1178, 407], ["2–5", 1302, 531], ["6–10", 712, 207], ["11–20", 613, 92], [">20", 462, 38]], "q2_dec": [[1960, "Movie", 54.6, 23], [1960, "TV Show", 52.0, 2], [1970, "Movie", 43.7, 66], [1970, "TV Show", 42.2, 4], [1980, "Movie", 34.2, 122], [1980, "TV Show", 31.3, 7], [1990, "Movie", 24.2, 241], [1990, "TV Show", 22.2, 33], [2000, "Movie", 13.6, 677], [2000, "TV Show", 11.7, 130], [2010, "Movie", 2.4, 4182], [2010, "TV Show", 1.8, 1731], [2020, "Movie", 0.2, 794], [2020, "TV Show", 0.1, 744]], "q2_res": [["Movie", 6129, 5.73, 2.0], ["TV Show", 2654, 2.31, 0.0]], "q2_total": [8783, 4.7, 54.9, 15.3], "q3": {"Movie": [["India", "International Movies", 864, 9.81], ["United States", "Dramas", 835, 9.48], ["United States", "Comedies", 680, 7.72], ["India", "Dramas", 662, 7.52], ["United States", "Documentaries", 512, 5.81], ["United States", "Action & Adventure", 404, 4.59], ["United States", "Children & Family Movies", 390, 4.43], ["United States", "Independent Movies", 390, 4.43], ["India", "Comedies", 323, 3.67], ["United States", "Thrillers", 292, 3.32]], "TV Show": [["United States", "TV Comedies", 258, 2.93], ["United States", "TV Dramas", 232, 2.63], ["United Kingdom", "British TV Shows", 225, 2.55], ["United States", "Kids' TV", 214, 2.43], ["United States", "Docuseries", 192, 2.18], ["South Korea", "International TV Shows", 152, 1.73], ["Japan", "International TV Shows", 151, 1.71], ["United States", "Crime TV Shows", 145, 1.65], ["Japan", "Anime Series", 143, 1.62], ["South Korea", "Korean TV Shows", 132, 1.5]]}, "q3_all": [["India", "International Movies", "Movie", 864, 9.81], ["United States", "Dramas", "Movie", 835, 9.48], ["United States", "Comedies", "Movie", 680, 7.72], ["India", "Dramas", "Movie", 662, 7.52], ["United States", "Documentaries", "Movie", 512, 5.81], ["United States", "Action & Adventure", "Movie", 404, 4.59], ["United States", "Children & Family Movies", "Movie", 390, 4.43], ["United States", "Independent Movies", "Movie", 390, 4.43], ["India", "Comedies", "Movie", 323, 3.67], ["United States", "Thrillers", "Movie", 292, 3.32]], "q4_tipo": [["Antiguo", "Movie", 1153, 113.3], ["Antiguo", "TV Show", 182, 2.3], ["Reciente", "Movie", 4978, 96.4], ["Reciente", "TV Show", 2494, 1.7]], "q4_gen": {"Antiguo": [["Dramas", 484, 36.3], ["International Movies", 449, 33.6], ["Comedies", 418, 31.3], ["Action & Adventure", 288, 21.6], ["Romantic Movies", 141, 10.6], ["Children & Family Movies", 116, 8.7]], "Reciente": [["International Movies", 2303, 30.8], ["Dramas", 1943, 26.0], ["International TV Shows", 1284, 17.2], ["Comedies", 1256, 16.8], ["Documentaries", 817, 10.9], ["TV Dramas", 731, 9.8]]}, "q4_rat": {"Antiguo": [["TV-14", 350, 26.2], ["R", 248, 18.6], ["PG-13", 213, 16.0], ["TV-MA", 177, 13.3], ["TV-PG", 127, 9.5], ["PG", 116, 8.7]], "Reciente": [["TV-MA", 3030, 40.6], ["TV-14", 1810, 24.2], ["TV-PG", 736, 9.9], ["R", 551, 7.4], ["TV-Y7", 300, 4.0], ["TV-Y", 299, 4.0]]}, "q4_n": {"Antiguo": 1335, "Reciente": 7472}, "q5": [["Rajiv Chilaka", 22, 2, 22, 0, "Children & Family Movies"], ["Jan Suter", 21, 1, 21, 0, "Stand-Up Comedy"], ["Raúl Campos", 19, 1, 19, 0, "Stand-Up Comedy"], ["Marcus Raboy", 16, 3, 15, 1, "Stand-Up Comedy"], ["Suhas Kadav", 16, 3, 16, 0, "Children & Family Movies"], ["Jay Karas", 15, 4, 15, 0, "Stand-Up Comedy"], ["Cathy Garcia-Molina", 13, 4, 13, 0, "International Movies"], ["Jay Chapman", 12, 2, 12, 0, "Stand-Up Comedy"], ["Martin Scorsese", 12, 9, 12, 0, "Dramas"], ["Youssef Chahine", 12, 6, 12, 0, "Dramas"]], "q5_sin": null, "q6": [["United States", 3690, 42], ["India", 1046, 35], ["United Kingdom", 806, 37], ["Canada", 445, 37], ["France", 393, 35], ["Japan", 318, 35], ["Spain", 232, 32], ["South Korea", 231, 29], ["Germany", 226, 32], ["Mexico", 169, 31], ["China", 162, 31], ["Australia", 160, 36], ["Egypt", 117, 21], ["Turkey", 113, 21], ["Hong Kong", 105, 20], ["Nigeria", 103, 16], ["Italy", 100, 28], ["Brazil", 97, 27], ["Argentina", 91, 30], ["Belgium", 90, 22], ["Indonesia", 90, 21], ["Taiwan", 89, 24], ["Philippines", 83, 20], ["Thailand", 70, 25], ["South Africa", 62, 24], ["Colombia", 52, 18], ["Netherlands", 50, 21], ["Denmark", 48, 20], ["Ireland", 46, 21], ["Sweden", 42, 19], ["Poland", 41, 18], ["Singapore", 41, 22], ["United Arab Emirates", 37, 16], ["New Zealand", 33, 20], ["Lebanon", 31, 14], ["Israel", 30, 19], ["Norway", 30, 21], ["Chile", 29, 15], ["Russia", 27, 21], ["Malaysia", 26, 15], ["Pakistan", 24, 13], ["Czech Republic", 22, 22]], "q7": [["Movie", "International Movies", "TV-14", "India", 240], ["Movie", "Dramas", "R", "United States", 233], ["Movie", "Dramas", "TV-14", "India", 180], ["Movie", "Action & Adventure", "R", "United States", 147], ["Movie", "Children & Family Movies", "PG", "United States", 141], ["Movie", "Comedies", "PG-13", "United States", 132], ["Movie", "Dramas", "PG-13", "United States", 129], ["Movie", "Comedies", "R", "United States", 122], ["Movie", "Comedies", "PG", "United States", 120], ["Movie", "Action & Adventure", "PG-13", "United States", 117], ["Movie", "Comedies", "TV-14", "India", 116], ["Movie", "International Movies", "TV-MA", "India", 114], ["Movie", "Independent Movies", "R", "United States", 111], ["TV Show", "TV Dramas", "TV-MA", "United States", 98], ["Movie", "Thrillers", "R", "United States", 97]]};
+const D = {"q1": {"paises": ["United States", "India", "United Kingdom", "Canada", "France", "Japan", "Spain", "South Korea"], "anios": [2015, 2016, 2017, 2018, 2019, 2020, 2021], "rows": [["United States", 2019, "Movie", 678], ["United States", 2020, "Movie", 582], ["United States", 2018, "Movie", 455], ["United States", 2021, "Movie", 452], ["United States", 2017, "Movie", 364], ["India", 2018, "Movie", 332], ["United States", 2020, "TV Show", 246], ["India", 2019, "Movie", 200], ["India", 2020, "Movie", 181], ["United States", 2019, "TV Show", 178], ["United States", 2021, "TV Show", 175], ["India", 2017, "Movie", 148], ["United States", 2018, "TV Show", 145], ["United States", 2016, "Movie", 139], ["United Kingdom", 2019, "Movie", 131], ["United Kingdom", 2018, "Movie", 103], ["United States", 2017, "TV Show", 98], ["United Kingdom", 2020, "Movie", 97], ["India", 2021, "Movie", 88], ["United Kingdom", 2021, "Movie", 83], ["United Kingdom", 2017, "Movie", 81], ["Canada", 2020, "Movie", 79], ["France", 2020, "Movie", 74], ["United States", 2016, "TV Show", 64], ["Canada", 2018, "Movie", 62], ["Canada", 2019, "Movie", 62], ["France", 2019, "Movie", 61], ["United Kingdom", 2019, "TV Show", 60], ["Canada", 2017, "Movie", 54], ["United Kingdom", 2017, "TV Show", 53], ["France", 2021, "Movie", 49], ["United Kingdom", 2020, "TV Show", 49], ["France", 2018, "Movie", 48], ["Japan", 2020, "TV Show", 48], ["France", 2017, "Movie", 47], ["Japan", 2019, "TV Show", 45], ["South Korea", 2019, "TV Show", 45], ["South Korea", 2020, "TV Show", 44], ["United Kingdom", 2018, "TV Show", 44], ["Canada", 2021, "Movie", 41], ["United States", 2015, "Movie", 41], ["Spain", 2017, "Movie", 37], ["Spain", 2018, "Movie", 37], ["United Kingdom", 2021, "TV Show", 37], ["Spain", 2019, "Movie", 36], ["South Korea", 2017, "TV Show", 32], ["United Kingdom", 2016, "Movie", 32], ["Canada", 2020, "TV Show", 31], ["Japan", 2018, "TV Show", 31], ["Japan", 2020, "Movie", 31], ["Japan", 2019, "Movie", 29], ["Japan", 2021, "TV Show", 29], ["Spain", 2020, "Movie", 26], ["Japan", 2016, "TV Show", 24], ["Japan", 2021, "Movie", 24], ["France", 2020, "TV Show", 23], ["Canada", 2019, "TV Show", 22], ["United Kingdom", 2016, "TV Show", 22], ["South Korea", 2021, "TV Show", 21], ["Spain", 2021, "Movie", 21], ["Japan", 2017, "TV Show", 20], ["Canada", 2018, "TV Show", 19], ["Canada", 2021, "TV Show", 18], ["France", 2019, "TV Show", 18], ["India", 2019, "TV Show", 18], ["India", 2020, "TV Show", 18], ["South Korea", 2018, "TV Show", 18], ["Canada", 2017, "TV Show", 17], ["India", 2018, "TV Show", 17], ["India", 2021, "TV Show", 17], ["Japan", 2017, "Movie", 17], ["Spain", 2019, "TV Show", 17], ["Spain", 2020, "TV Show", 17], ["Canada", 2016, "Movie", 16], ["France", 2016, "Movie", 16], ["France", 2018, "TV Show", 16], ["United States", 2015, "TV Show", 16], ["South Korea", 2018, "Movie", 15], ["Canada", 2016, "TV Show", 14], ["India", 2017, "TV Show", 14], ["South Korea", 2019, "Movie", 14], ["France", 2016, "TV Show", 13], ["India", 2016, "Movie", 13], ["Japan", 2018, "Movie", 13], ["Spain", 2016, "Movie", 13], ["South Korea", 2020, "Movie", 12], ["Spain", 2021, "TV Show", 12], ["France", 2021, "TV Show", 11], ["South Korea", 2017, "Movie", 11], ["South Korea", 2016, "TV Show", 10], ["South Korea", 2021, "Movie", 8], ["France", 2015, "Movie", 6], ["France", 2017, "TV Show", 6], ["Spain", 2018, "TV Show", 6], ["Japan", 2016, "Movie", 5], ["Spain", 2017, "TV Show", 5], ["United Kingdom", 2015, "TV Show", 5], ["Spain", 2016, "TV Show", 4], ["Canada", 2015, "Movie", 3], ["Canada", 2015, "TV Show", 3], ["France", 2015, "TV Show", 3], ["United Kingdom", 2015, "Movie", 3], ["Japan", 2015, "TV Show", 1], ["South Korea", 2016, "Movie", 1]]}, "q2_rango": [["0", 1862, 1379], ["1", 1178, 407], ["2–5", 1302, 531], ["6–10", 712, 207], ["11–20", 613, 92], [">20", 462, 38]], "q2_dec": [[1960, "Movie", 54.6, 23], [1960, "TV Show", 52.0, 2], [1970, "Movie", 43.7, 66], [1970, "TV Show", 42.2, 4], [1980, "Movie", 34.2, 122], [1980, "TV Show", 31.3, 7], [1990, "Movie", 24.2, 241], [1990, "TV Show", 22.2, 33], [2000, "Movie", 13.6, 677], [2000, "TV Show", 11.7, 130], [2010, "Movie", 2.4, 4182], [2010, "TV Show", 1.8, 1731], [2020, "Movie", 0.2, 794], [2020, "TV Show", 0.1, 744]], "q2_res": [["Movie", 6129, 5.73, 2.0], ["TV Show", 2654, 2.31, 0.0]], "q2_total": [8783, 4.7, 54.9, 15.3], "q4_tipo": [["Antiguo", "Movie", 1153, 113.3], ["Antiguo", "TV Show", 182, 2.3], ["Reciente", "Movie", 4978, 96.4], ["Reciente", "TV Show", 2494, 1.7]], "q4_gen": {"Antiguo": [["Dramas", 484, 36.3], ["International Movies", 449, 33.6], ["Comedies", 418, 31.3], ["Action & Adventure", 288, 21.6], ["Romantic Movies", 141, 10.6], ["Children & Family Movies", 116, 8.7]], "Reciente": [["International Movies", 2303, 30.8], ["Dramas", 1943, 26.0], ["International TV Shows", 1284, 17.2], ["Comedies", 1256, 16.8], ["Documentaries", 817, 10.9], ["TV Dramas", 731, 9.8]]}, "q4_rat": {"Antiguo": [["TV-14", 350, 26.2], ["R", 248, 18.6], ["PG-13", 213, 16.0], ["TV-MA", 177, 13.3], ["TV-PG", 127, 9.5], ["PG", 116, 8.7]], "Reciente": [["TV-MA", 3030, 40.6], ["TV-14", 1810, 24.2], ["TV-PG", 736, 9.9], ["R", 551, 7.4], ["TV-Y7", 300, 4.0], ["TV-Y", 299, 4.0]]}, "q4_n": {"Antiguo": 1335, "Reciente": 7472}, "q5": [["Rajiv Chilaka", 22, 2, 22, 0, "Children & Family Movies"], ["Jan Suter", 21, 1, 21, 0, "Stand-Up Comedy"], ["Raúl Campos", 19, 1, 19, 0, "Stand-Up Comedy"], ["Marcus Raboy", 16, 3, 15, 1, "Stand-Up Comedy"], ["Suhas Kadav", 16, 3, 16, 0, "Children & Family Movies"], ["Jay Karas", 15, 4, 15, 0, "Stand-Up Comedy"], ["Cathy Garcia-Molina", 13, 4, 13, 0, "International Movies"], ["Jay Chapman", 12, 2, 12, 0, "Stand-Up Comedy"], ["Martin Scorsese", 12, 9, 12, 0, "Dramas"], ["Youssef Chahine", 12, 6, 12, 0, "Dramas"]], "q5_sin": null, "q6": [["United States", 3690, 42], ["India", 1046, 35], ["United Kingdom", 806, 37], ["Canada", 445, 37], ["France", 393, 35], ["Japan", 318, 35], ["Spain", 232, 32], ["South Korea", 231, 29], ["Germany", 226, 32], ["Mexico", 169, 31], ["China", 162, 31], ["Australia", 160, 36], ["Egypt", 117, 21], ["Turkey", 113, 21], ["Hong Kong", 105, 20], ["Nigeria", 103, 16], ["Italy", 100, 28], ["Brazil", 97, 27], ["Argentina", 91, 30], ["Belgium", 90, 22], ["Indonesia", 90, 21], ["Taiwan", 89, 24], ["Philippines", 83, 20], ["Thailand", 70, 25], ["South Africa", 62, 24], ["Colombia", 52, 18], ["Netherlands", 50, 21], ["Denmark", 48, 20], ["Ireland", 46, 21], ["Sweden", 42, 19], ["Poland", 41, 18], ["Singapore", 41, 22], ["United Arab Emirates", 37, 16], ["New Zealand", 33, 20], ["Lebanon", 31, 14], ["Israel", 30, 19], ["Norway", 30, 21], ["Chile", 29, 15], ["Russia", 27, 21], ["Malaysia", 26, 15], ["Pakistan", 24, 13], ["Czech Republic", 22, 22]]};
 const fmt = n => Number(n).toLocaleString('es-AR');
 const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const $ = s => document.querySelector(s);
@@ -499,23 +499,6 @@ WHERE h.anios_hasta_incorporacion IS NOT NULL;`,`SELECT CASE WHEN anios = 0  THE
        COUNT(*) AS titulos
 FROM pregunta2_lanzamiento_incorporacion
 GROUP BY rango, tipo;`],
-3:[`CREATE OR REPLACE VIEW pregunta3_pais_genero_tipo AS
-SELECT p.nombre_pais     AS pais,
-       g.nombre_genero   AS genero,
-       t.tipo_contenido  AS tipo,
-       COUNT(DISTINCT h.show_id) AS titulos,
-       ROUND(COUNT(DISTINCT h.show_id) * 100 /
-             (SELECT COUNT(DISTINCT show_id) FROM hechos_catalogo), 2) AS porcentaje
-FROM hechos_catalogo h
-JOIN dim_pais p           ON h.id_pais = p.id_pais
-JOIN dim_genero g         ON h.id_genero = g.id_genero
-JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
-WHERE p.nombre_pais <> 'Sin dato'
-GROUP BY p.nombre_pais, g.nombre_genero, t.tipo_contenido
-ORDER BY titulos DESC;`,`SELECT pais, genero, tipo, titulos, porcentaje
-FROM pregunta3_pais_genero_tipo
-ORDER BY titulos DESC
-LIMIT 10;`],
 4:[`CREATE OR REPLACE VIEW pregunta4_antiguo_reciente AS
 SELECT DISTINCT h.show_id,
        CASE WHEN tl.anio < 2010 THEN 'Antiguo' ELSE 'Reciente' END AS grupo,
@@ -547,7 +530,6 @@ JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
 JOIN dim_genero g         ON h.id_genero = g.id_genero
 WHERE d.nombre_director <> 'Sin dato';`,`SELECT director,
        COUNT(DISTINCT show_id) AS titulos,
-       COUNT(DISTINCT genero)  AS generos_distintos,
        COUNT(DISTINCT CASE WHEN tipo = 'Movie'   THEN show_id END) AS peliculas,
        COUNT(DISTINCT CASE WHEN tipo = 'TV Show' THEN show_id END) AS series
 FROM pregunta5_directores
@@ -565,46 +547,24 @@ GROUP BY p.nombre_pais
 HAVING COUNT(DISTINCT h.show_id) >= 20
 ORDER BY titulos DESC;`,`SELECT pais, titulos, generos_distintos
 FROM pregunta6_diversidad_generos
-ORDER BY generos_distintos DESC, titulos DESC;`],
-7:[`CREATE OR REPLACE VIEW pregunta7_combinaciones_recientes AS
-SELECT t.tipo_contenido  AS tipo,
-       g.nombre_genero   AS genero,
-       c.codigo_rating   AS clasificacion,
-       p.nombre_pais     AS pais,
-       COUNT(DISTINCT h.show_id) AS titulos
-FROM hechos_catalogo h
-JOIN dim_tipo_contenido t ON h.id_tipo = t.id_tipo
-JOIN dim_genero g         ON h.id_genero = g.id_genero
-JOIN dim_clasificacion c  ON h.id_clasificacion = c.id_clasificacion
-JOIN dim_pais p           ON h.id_pais = p.id_pais
-JOIN dim_tiempo ti        ON h.id_tiempo_incorporacion = ti.id_tiempo
-WHERE ti.anio >= 2019
-  AND p.nombre_pais <> 'Sin dato'
-GROUP BY t.tipo_contenido, g.nombre_genero, c.codigo_rating, p.nombre_pais
-ORDER BY titulos DESC
-LIMIT 15;`,`SELECT tipo, genero, clasificacion, pais, titulos
-FROM pregunta7_combinaciones_recientes
-ORDER BY titulos DESC;`]};
+ORDER BY generos_distintos DESC, titulos DESC;`]};
 const KW = /\b(CREATE|OR|REPLACE|VIEW|AS|SELECT|DISTINCT|FROM|JOIN|ON|WHERE|AND|IS|NOT|NULL|GROUP|BY|ORDER|DESC|LIMIT|HAVING|CASE|WHEN|THEN|ELSE|END|IN|BETWEEN|COUNT|SUM|AVG|ROUND)\b/g;
 const hl = s => esc(s).replace(KW,'<span class="kw">$1</span>');
 
 /* ---------- preguntas ---------- */
 const Q = [
- {n:1,q:REQ[0][0],ind:['Cantidad de títulos'],per:['País','Tiempo','Tipo'],
-  ans:'Estados Unidos es el país con más títulos incorporados entre 2015 y 2021 (3 633), seguido por India (1 046) y Reino Unido (800). Estados Unidos tuvo su pico en 2019 con 856 títulos. India creció muy rápido hasta 2018 (349) y después bajó. En casi todos los países predominan las películas; Corea del Sur y Japón son la excepción, con más series.'},
- {n:2,q:REQ[1][0],ind:['Tiempo transcurrido'],per:['Tiempo','Tipo'],
-  ans:'Sí. Cuanto más reciente es el lanzamiento, menos tarda en llegar a Netflix: los títulos de la década de 1960 tardaron más de 50 años y los de 2020 casi ninguno. El 55 % se incorporó el mismo año o al siguiente. Las series llegan más rápido (2,3 años en promedio) que las películas (5,7). Parte de la relación es esperable, porque todas las incorporaciones ocurren entre 2008 y 2021.'},
- {n:3,q:REQ[2][0],ind:['Cantidad de títulos','% de participación'],per:['País','Género','Tipo'],
-  ans:'Las combinaciones más frecuentes son películas: India + International Movies (864 títulos, 9,81 % del catálogo) y Estados Unidos + Dramas (835, 9,48 %). Estados Unidos domina las películas de género (comedia, documental, acción, infantil). En series aparecen otros países: Reino Unido con British TV Shows, y Japón y Corea del Sur con series internacionales, anime y Korean TV Shows.'},
- {n:4,q:REQ[3][0],ind:['Cantidad de títulos','Duración promedio'],per:['Tiempo','Género','Clasificación','Tipo'],
-  ans:'El contenido antiguo (estrenado antes de 2010) es casi todo película (86 %) y sus películas duran más: 113 minutos contra 96 de las recientes. Lo reciente suma muchas más series (33 %), gana peso la clasificación adulta TV-MA (41 % contra 13 %) y aparecen documentales y series internacionales entre los géneros principales.'},
- {n:5,q:REQ[4][0],ind:['Cantidad de títulos'],per:['Director','Género','Tipo'],
-  ans:'El director con más títulos es Rajiv Chilaka (22), seguido por Jan Suter (21) y Raúl Campos (19). Nueve de los diez dirigen solo películas. Se concentran en dos nichos: especiales de stand-up y animación infantil. Martin Scorsese es la excepción por variedad: 12 títulos en 9 géneros. 2 634 títulos no informan director.'},
- {n:6,q:REQ[5][0],ind:['Cantidad de títulos','Diversidad de género'],per:['País','Género'],
-  ans:'En general sí: entre los 42 países con al menos 20 títulos, los que tienen más títulos cubren más géneros. Estados Unidos llega a 42, y Reino Unido y Canadá a 37. Pero la relación no es lineal: Australia tiene 36 géneros con solo 160 títulos, y República Checa 22 géneros en 22 títulos.'},
- {n:7,q:REQ[6][0],ind:['Frecuencia de combinación'],per:['Tipo','Género','Clasificación','País'],
-  ans:'Entre lo incorporado desde 2019, la combinación más frecuente es película · International Movies · TV-14 · India (240 títulos), seguida por película · Dramas · R · Estados Unidos (233). De las 15 combinaciones principales, 14 son películas y todas son de Estados Unidos o India. La única serie es TV Dramas · TV-MA · Estados Unidos.'}
+ {n:1,q:'¿Qué países tienen una mayor presencia en el catálogo de Netflix según el rango de fecha?',ind:['Cantidad de títulos'],per:['País','Tiempo','Tipo'],
+  ans:'Estados Unidos es el país con más títulos incorporados en 2015–2021 (3 633), seguido por India (1 046) y Reino Unido (800). El pico de Estados Unidos fue en 2019 con 856 títulos. Se observa un gran dominio por parte del país en cuanto al control y presencia en el catálogo de la plataforma (triplica la cantidad de producciones que su principal competencia).'},
+ {n:2,q:'¿Existe una relación entre el año de lanzamiento de un contenido y el tiempo que tardó en incorporarse al catálogo de Netflix?',ind:['Tiempo transcurrido'],per:['Tiempo','Tipo'],
+  ans:'El 37 % de los títulos se incorporó el mismo año de su lanzamiento (55 % si se suma el año siguiente). Como observamos en el gráfico, muchas de las producciones se incorporan el mismo año que se lanzaron, aunque también hay una gran parte que tardan hasta 5 años en incorporarse. Dentro de esto, podemos decir que las series se incorporan más rápido, mientras que las películas tienen una cola larga de títulos antiguos (si bien en el mismo año tienen un buen número de incorporaciones, en los otros rangos de fechas son muchas más películas que series).'},
+ {n:4,q:'¿Qué características distinguen al contenido más antiguo del reciente en términos de género y duración?',ind:['Cantidad de títulos','Duración promedio'],per:['Tiempo','Género','Tipo'],
+  ans:'El contenido antiguo es mayormente películas (86,4 %), mientras que en el reciente las series aumentan su porcentaje, pero no lo superan ni igualan (33,4 %). Las películas antiguas duran en promedio 113,3 min contra 96,4 min de las recientes. En el caso de las series, antes, en promedio, presentaban 2,3 temporadas, mientras que ahora presentan 1,7 en promedio (disminución en la producción). En cuanto al género, antiguamente el principal era Drama (484), mientras que en el reciente es Películas Internacionales (2 303).'},
+ {n:5,q:'¿Qué directores aparecen con mayor frecuencia en el catálogo y en qué tipos de contenido participan principalmente?',ind:['Cantidad de títulos'],per:['Director','Tipo'],
+  ans:'El director con más títulos es Rajiv Chilaka (22 títulos). De los 10 principales (excepto Marcus Raboy), todos dirigen únicamente películas, lo que muestra que la dirección se especializa frecuentemente en películas.'},
+ {n:6,q:'¿Los países que producen mayor cantidad de contenido también presentan una mayor diversidad de géneros?',ind:['Cantidad de títulos','Diversidad de género'],per:['País','Género'],
+  ans:'Estados Unidos es el país con mayor diversidad (42 géneros distintos en 3 690 títulos). La diversidad crece con el volumen de títulos, aunque hay países con catálogos chicos y muy variados. Podemos decir que los países dominantes en el catálogo presentan mucha variedad en género.'}
 ];
+const QN = Q.map(q=>q.n);
 
 const qs = $('#questions');
 $('#qnav').innerHTML = Q.map(q=>`<a href="#q${q.n}" data-q="${q.n}">P${q.n}</a>`).join('');
@@ -655,7 +615,7 @@ const grid = () => ({color: css('--line'), drawTicks:false});
 const S = () => ({movie:css('--s1'), tv:css('--s2'), c:[css('--s1'),css('--s2'),css('--s3'),css('--s4'),css('--s5')], old:css('--s7'), rec:css('--s3')});
 const barOpts = {borderRadius:4, borderSkipped:'start', borderWidth:0};
 
-const state = {q1:'Todos', q3:'Movie'};
+const state = {q1:'Todos'};
 const render = {
  1(){
   const s=S(); const top5=D.q1.paises.slice(0,5), yrs=D.q1.anios;
@@ -680,44 +640,37 @@ const render = {
   const dv=t=>decs.map(d=>{const r=D.q2_dec.find(x=>x[0]===d&&x[1]===t);return r?r[2]:null});
   make('c2b',{type:'line',data:{labels:decs.map(d=>d+'s'),datasets:[{label:'Películas',data:dv('Movie'),borderColor:s.movie,backgroundColor:s.movie,borderWidth:2,pointRadius:4},{label:'Series',data:dv('TV Show'),borderColor:s.tv,backgroundColor:s.tv,borderWidth:2,pointRadius:4}]},
    options:{interaction:{mode:'index',intersect:false},plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y} años`}}},scales:{y:{beginAtZero:true,grid:grid(),title:{display:true,text:'Años promedio'}},x:{grid:{display:false}}}}});
-  $('#tab2').innerHTML = table(['Años hasta incorporarse','Películas','Series','Total'],R.map(r=>[r[0]==='0'?'0 (mismo año)':r[0]==='1'?'1 año':r[0]+' años',r[1],r[2],r[1]+r[2]]),[1,2,3])
-   + table(['Tipo','Títulos','Promedio (años)','Mediana (años)'],D.q2_res.map(r=>[r[0]==='Movie'?'Películas':'Series',r[1],String(r[2]).replace('.',','),String(r[3]).replace('.',',')]),[1,2,3]);
- },
- 3(){
-  const s=S(); const rows=D.q3[state.q3]; const col=state.q3==='Movie'?s.movie:s.tv;
-  $('#ctl3').innerHTML = seg('s3',[['Movie','Películas'],['TV Show','Series']],state.q3) + `<span style="font-size:.84rem;color:var(--ink-3)">% sobre el total de títulos del catálogo</span>`;
-  $('#body3').innerHTML = box('c3',true);
-  make('c3',{type:'bar',data:{labels:rows.map(r=>r[0]+' · '+r[1]),datasets:[{label:'% del catálogo',data:rows.map(r=>r[3]),backgroundColor:col,...barOpts}]},
-   options:{indexAxis:'y',plugins:{tooltip:{callbacks:{label:c=>`${fmt(rows[c.dataIndex][2])} títulos · ${String(c.parsed.x).replace('.',',')} %`}}},scales:{x:{beginAtZero:true,grid:grid(),title:{display:true,text:'% del catálogo'}},y:{grid:{display:false}}}}});
-  $('#tab3').innerHTML = table(['País','Género','Títulos','%'],rows.map(r=>[r[0],r[1],r[2],String(r[3]).replace('.',',')]),[2,3]);
-  bindSeg('s3',v=>{state.q3=v;render[3]()});
+  $('#tab2').innerHTML = table(['Años hasta incorporarse','Películas','Series','Total'],R.map(r=>[r[0]==='0'?'0 (mismo año)':r[0]==='1'?'1 año':r[0]+' años',r[1],r[2],r[1]+r[2]]),[1,2,3]);
  },
  4(){
   const s=S(); const t=D.q4_tipo; const g=(gr,tp)=>t.find(r=>r[0]===gr&&r[1]===tp);
-  const n=D.q4_n;
-  $('#ctl4').innerHTML = legend([['Antiguo (antes de 2010) · '+fmt(n.Antiguo)+' títulos',s.old],['Reciente (2010 en adelante) · '+fmt(n.Reciente)+' títulos',s.rec]]);
-  const pctTV = gr => (g(gr,'TV Show')[2]/n[gr]*100).toFixed(1).replace('.',',');
+  const n=D.q4_n; const num=v=>String(v).replace('.',',');
+  $('#ctl4').innerHTML = legend([['Películas',s.movie],['Series',s.tv]]) + `<span style="font-size:.84rem;color:var(--ink-3)">Antiguo: antes de 2010 (${fmt(n.Antiguo)} títulos) · Reciente: 2010 en adelante (${fmt(n.Reciente)} títulos)</span>`;
+  const pct = (gr,tp) => (g(gr,tp)[2]/n[gr]*100).toFixed(1).replace('.',',');
   $('#body4').innerHTML = `<div class="tw"><table><thead><tr><th>Característica</th><th class="num">Antiguo</th><th class="num">Reciente</th></tr></thead><tbody>
-    <tr><td>Series sobre el total</td><td class="num">${pctTV('Antiguo')} %</td><td class="num">${pctTV('Reciente')} %</td></tr>
-    <tr><td>Duración promedio de películas</td><td class="num">${String(g('Antiguo','Movie')[3]).replace('.',',')} min</td><td class="num">${String(g('Reciente','Movie')[3]).replace('.',',')} min</td></tr>
-    <tr><td>Temporadas promedio de series</td><td class="num">${String(g('Antiguo','TV Show')[3]).replace('.',',')}</td><td class="num">${String(g('Reciente','TV Show')[3]).replace('.',',')}</td></tr>
-    <tr><td>Clasificación más frecuente</td><td class="num">${D.q4_rat.Antiguo[0][0]}</td><td class="num">${D.q4_rat.Reciente[0][0]}</td></tr></tbody></table></div>
-   <div class="grid2"><div style="min-width:0"><p style="font-weight:600;margin-bottom:6px">Géneros principales (% de títulos del grupo)</p>${box('c4a',true)}</div><div style="min-width:0"><p style="font-weight:600;margin-bottom:6px">Clasificación (% de títulos del grupo)</p>${box('c4b',true)}</div></div>`;
-  const two=(id,obj)=>{const labels=[...new Set([...obj.Antiguo.map(r=>r[0]),...obj.Reciente.map(r=>r[0])])];
-   const v=gr=>labels.map(l=>{const r=obj[gr].find(x=>x[0]===l);return r?r[2]:null});
-   make(id,{type:'bar',data:{labels,datasets:[{label:'Antiguo',data:v('Antiguo'),backgroundColor:s.old,...barOpts},{label:'Reciente',data:v('Reciente'),backgroundColor:s.rec,...barOpts}]},
-    options:{indexAxis:'y',datasets:{bar:{categoryPercentage:.75,barPercentage:.92}},plugins:{tooltip:{callbacks:{label:c=>c.parsed.x==null?`${c.dataset.label}: fuera del top 6`:`${c.dataset.label}: ${String(c.parsed.x).replace('.',',')} %`}}},scales:{x:{beginAtZero:true,grid:grid(),title:{display:true,text:'% del grupo'}},y:{grid:{display:false}}}}});};
-  two('c4a',D.q4_gen); two('c4b',D.q4_rat);
-  $('#tab4').innerHTML = table(['Grupo','Tipo','Títulos','Duración promedio','Unidad'],t.map(r=>[r[0],r[1],r[2],String(r[3]).replace('.',','),r[1]==='Movie'?'minutos':'temporadas']),[2,3]);
+    <tr><td>Películas sobre el total</td><td class="num">${pct('Antiguo','Movie')} %</td><td class="num">${pct('Reciente','Movie')} %</td></tr>
+    <tr><td>Series sobre el total</td><td class="num">${pct('Antiguo','TV Show')} %</td><td class="num">${pct('Reciente','TV Show')} %</td></tr>
+    <tr><td>Duración promedio de películas</td><td class="num">${num(g('Antiguo','Movie')[3])} min</td><td class="num">${num(g('Reciente','Movie')[3])} min</td></tr>
+    <tr><td>Temporadas promedio de series</td><td class="num">${num(g('Antiguo','TV Show')[3])}</td><td class="num">${num(g('Reciente','TV Show')[3])}</td></tr>
+    <tr><td>Género principal</td><td class="num">${D.q4_gen.Antiguo[0][0]}</td><td class="num">${D.q4_gen.Reciente[0][0]}</td></tr></tbody></table></div>
+   <p style="font-weight:600;margin-bottom:-6px">Top 3 géneros (cantidad de títulos)</p>
+   <div class="grid2"><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Contenido antiguo</p>${box('c4a')}</div><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Contenido reciente</p>${box('c4b')}</div></div>`;
+  const top3 = gr => D.q4_gen[gr].slice(0,3);
+  const ymax = Math.max(...['Antiguo','Reciente'].flatMap(gr=>top3(gr).map(r=>r[1])));
+  const bars=(id,gr)=>{const r=top3(gr);
+   make(id,{type:'bar',data:{labels:r.map(x=>x[0].length>12?[x[0].split(' ')[0],x[0].split(' ').slice(1).join(' ')]:x[0]),datasets:[{label:'Títulos',data:r.map(x=>x[1]),backgroundColor:r.map(x=>/TV/.test(x[0])?s.tv:s.movie),...barOpts}]},
+    options:{plugins:{tooltip:{callbacks:{label:c=>`${fmt(c.parsed.y)} títulos`}}},scales:{y:{beginAtZero:true,suggestedMax:ymax,grid:grid(),title:{display:true,text:'Títulos'}},x:{grid:{display:false},ticks:{maxRotation:0}}}}});};
+  bars('c4a','Antiguo'); bars('c4b','Reciente');
+  $('#tab4').innerHTML = table(['Grupo','Tipo','Títulos','Duración promedio','Unidad'],t.map(r=>[r[0],r[1],r[2],num(r[3]),r[1]==='Movie'?'minutos':'temporadas']),[2,3])
+   + table(['Grupo','Género','Títulos'],['Antiguo','Reciente'].flatMap(gr=>top3(gr).map(r=>[gr,r[0],r[1]])),[2]);
  },
  5(){
   const s=S(); const r=D.q5;
   $('#ctl5').innerHTML = legend([['Películas',s.movie],['Series',s.tv]]);
   $('#body5').innerHTML = box('c5',true);
   make('c5',{type:'bar',data:{labels:r.map(x=>x[0]),datasets:[{label:'Películas',data:r.map(x=>x[3]),backgroundColor:s.movie,...barOpts,borderSkipped:false,borderRadius:0},{label:'Series',data:r.map(x=>x[4]),backgroundColor:s.tv,...barOpts,borderSkipped:false,borderRadius:0}]},
-   options:{indexAxis:'y',scales:{x:{stacked:true,beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos'}},y:{stacked:true,grid:{display:false}}},
-    plugins:{tooltip:{callbacks:{afterBody:c=>`${r[c[0].dataIndex][2]} géneros · principal: ${r[c[0].dataIndex][5]}`}}}}});
-  $('#tab5').innerHTML = table(['Director','Títulos','Géneros','Películas','Series','Género principal'],r,[1,2,3,4]);
+   options:{indexAxis:'y',scales:{x:{stacked:true,beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos'}},y:{stacked:true,grid:{display:false}}}}});
+  $('#tab5').innerHTML = table(['Director','Títulos','Películas','Series'],r.map(x=>[x[0],x[1],x[3],x[4]]),[1,2,3]);
  },
  6(){
   const s=S(); const r=D.q6;
@@ -730,19 +683,11 @@ const render = {
    options:{layout:{padding:{right:70}},plugins:{tooltip:{callbacks:{label:c=>`${r[c.dataIndex][0]}: ${fmt(c.parsed.x)} títulos, ${c.parsed.y} géneros`}}},
     scales:{x:{type:'logarithmic',grid:grid(),title:{display:true,text:'Títulos (escala logarítmica)'},ticks:{callback:v=>[20,50,100,200,500,1000,2000,5000].includes(v)?fmt(v):''}},y:{grid:grid(),title:{display:true,text:'Géneros distintos'},suggestedMin:10}}},plugins:[labelPlugin]});
   $('#tab6').innerHTML = table(['País','Títulos','Géneros distintos'],[...r].sort((a,b)=>b[2]-a[2]||b[1]-a[1]),[1,2]);
- },
- 7(){
-  const s=S(); const r=D.q7;
-  $('#ctl7').innerHTML = legend([['Películas',s.movie],['Series',s.tv]]);
-  $('#body7').innerHTML = box('c7',true);
-  make('c7',{type:'bar',data:{labels:r.map(x=>`${x[3]} · ${x[1]} · ${x[2]}`),datasets:[{label:'Títulos',data:r.map(x=>x[4]),backgroundColor:r.map(x=>x[0]==='Movie'?s.movie:s.tv),...barOpts}]},
-   options:{indexAxis:'y',plugins:{tooltip:{callbacks:{label:c=>`${r[c.dataIndex][0]==='Movie'?'Película':'Serie'} · ${c.parsed.x} títulos`}}},scales:{x:{beginAtZero:true,grid:grid(),title:{display:true,text:'Títulos incorporados desde 2019'}},y:{grid:{display:false},ticks:{font:{size:11}}}}}});
-  $('#tab7').innerHTML = table(['Tipo','Género','Clasificación','País','Títulos'],r,[4]);
  }
 };
 function bindSeg(id, fn){ document.querySelectorAll('#'+id+' button').forEach(b=>b.addEventListener('click',()=>fn(b.dataset.v))); }
 let built=false;
-function buildBoard(){ if(typeof Chart==='undefined'){ qs.insertAdjacentHTML('afterbegin','<p class="answer">No se pudo cargar la librería de gráficos. Las tablas siguen disponibles.</p>'); return; } base(); for(let i=1;i<=7;i++){ try{render[i]()}catch(e){console.error(e)} } built=true; }
+function buildBoard(){ if(typeof Chart==='undefined'){ qs.insertAdjacentHTML('afterbegin','<p class="answer">No se pudo cargar la librería de gráficos. Las tablas siguen disponibles.</p>'); return; } base(); for(const i of QN){ try{render[i]()}catch(e){console.error(e)} } built=true; }
 
 /* ---------- navegación ---------- */
 const VIEWS=['inicio','paso1','paso2','paso3','paso4','tablero','conclusiones'];
@@ -758,7 +703,7 @@ document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=
 let start = (location.hash||'').slice(1);
 if(!VIEWS.includes(start)){ try{start=localStorage.getItem('dwnetflix-view')||'inicio'}catch(e){start='inicio'} }
 show(start,false);
-const rerender=()=>{ if(built){ base(); for(let i=1;i<=7;i++){ try{render[i]()}catch(e){} } } };
+const rerender=()=>{ if(built){ base(); for(const i of QN){ try{render[i]()}catch(e){} } } };
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',rerender);
 new MutationObserver(rerender).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 </script>

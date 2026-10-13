@@ -662,6 +662,8 @@ const render = {
     <tr><td>Duración promedio de películas</td><td class="num">${num(g('Antiguo','Movie')[3])} min</td><td class="num">${num(g('Reciente','Movie')[3])} min</td></tr>
     <tr><td>Temporadas promedio de series</td><td class="num">${num(g('Antiguo','TV Show')[3])}</td><td class="num">${num(g('Reciente','TV Show')[3])}</td></tr>
     <tr><td>Género principal</td><td class="num">${D.q4_gen.Antiguo[0][0]}</td><td class="num">${D.q4_gen.Reciente[0][0]}</td></tr></tbody></table></div>
+       <p style="font-weight:600;margin-bottom:-6px">Composición por tipo y duración promedio</p>
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px"><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Composición por tipo (%)</p>${box('c4c')}</div><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Duración de películas (min)</p>${box('c4d')}</div><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Temporadas de series</p>${box('c4e')}</div></div>
    <p style="font-weight:600;margin-bottom:-6px">Top 3 géneros (cantidad de títulos)</p>
    <div class="grid2"><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Contenido antiguo</p>${box('c4a')}</div><div style="min-width:0"><p style="margin-bottom:6px;color:var(--ink-2)">Contenido reciente</p>${box('c4b')}</div></div>`;
   const top3 = gr => D.q4_gen[gr].slice(0,3);
@@ -670,6 +672,12 @@ const render = {
    make(id,{type:'bar',data:{labels:r.map(x=>x[0].length>12?[x[0].split(' ')[0],x[0].split(' ').slice(1).join(' ')]:x[0]),datasets:[{label:'Títulos',data:r.map(x=>x[1]),backgroundColor:r.map(x=>/TV/.test(x[0])?s.tv:s.movie),...barOpts}]},
     options:{plugins:{tooltip:{callbacks:{label:c=>`${fmt(c.parsed.y)} títulos`}}},scales:{y:{beginAtZero:true,suggestedMax:ymax,grid:grid(),title:{display:true,text:'Títulos'}},x:{grid:{display:false},ticks:{maxRotation:0}}}}});};
   bars('c4a','Antiguo'); bars('c4b','Reciente');
+     const G=['Antiguo','Reciente'], pc=(gr,tp)=>+(g(gr,tp)[2]/n[gr]*100).toFixed(1);
+  make('c4c',{type:'bar',data:{labels:G,datasets:[{label:'Películas',data:G.map(gr=>pc(gr,'Movie')),backgroundColor:s.movie,...barOpts,borderSkipped:false,borderRadius:0},{label:'Series',data:G.map(gr=>pc(gr,'TV Show')),backgroundColor:s.tv,...barOpts,borderSkipped:false,borderRadius:0}]},
+   options:{plugins:{tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${String(c.parsed.y).replace('.',',')} %`}}},scales:{y:{stacked:true,beginAtZero:true,max:100,grid:grid(),title:{display:true,text:'% del grupo'}},x:{stacked:true,grid:{display:false}}}}});
+  const dur=(id,tp,col,uni)=>make(id,{type:'bar',data:{labels:G,datasets:[{label:uni,data:G.map(gr=>g(gr,tp)[3]),backgroundColor:col,...barOpts}]},
+   options:{plugins:{tooltip:{callbacks:{label:c=>`${String(c.parsed.y).replace('.',',')} ${uni}`}}},scales:{y:{beginAtZero:true,grid:grid(),title:{display:true,text:uni}},x:{grid:{display:false}}}}});
+  dur('c4d','Movie',s.movie,'minutos'); dur('c4e','TV Show',s.tv,'temporadas');
   $('#tab4').innerHTML = table(['Grupo','Tipo','Títulos','Duración promedio','Unidad'],t.map(r=>[r[0],r[1],r[2],num(r[3]),r[1]==='Movie'?'minutos':'temporadas']),[2,3])
    + table(['Grupo','Género','Títulos'],['Antiguo','Reciente'].flatMap(gr=>top3(gr).map(r=>[gr,r[0],r[1]])),[2]);
  },

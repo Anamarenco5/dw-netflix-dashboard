@@ -387,6 +387,15 @@ ul.clean{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:6px;
       <p class="lede">Cada respuesta sale de una vista creada sobre el modelo estrella en <code>dw_netflix</code>. Abajo de cada gráfico están la consulta SQL y la tabla de resultados.</p>
       <p><a href="dashboard.html" style="color:var(--accent);font-weight:600">Ver el dashboard.md generado en JupyterLab →</a></p>
     </div>
+    <div class="panel" style="border-left:4px solid var(--accent)">
+      <h3>Cambios respecto de las preguntas originales</h3>
+      <p>En el Paso 1 definimos siete preguntas de negocio. Al analizar los resultados del Data Mart revisamos ese planteo:</p>
+      <ul style="margin:0;padding-left:20px;max-width:72ch">
+        <li><b>Eliminamos las preguntas 3 y 7</b> (relación entre país, género y tipo de contenido, y combinación que caracteriza al contenido reciente). Ambas cruzaban tres o cuatro perspectivas a la vez y daban como salida listas largas de combinaciones que no nos permitieron llegar a una interpretación clara y concluyente con el alcance de este trabajo.</li>
+        <li><b>Acotamos el alcance de las preguntas 4 y 5</b> para adaptarlas mejor a lo que muestran los resultados: la 4 compara contenido antiguo y reciente solo por género y duración (sin clasificación ni país de origen), y la 5 analiza los directores por tipo de contenido (sin el desglose por género).</li>
+      </ul>
+      <p>Mantuvimos la numeración original para que cada pregunta pueda rastrearse hasta su definición en el Paso 1.</p>
+    </div>
     <nav class="qnav" id="qnav" aria-label="Preguntas"></nav>
     <div id="questions" style="display:flex;flex-direction:column;gap:28px"></div>
   </section>

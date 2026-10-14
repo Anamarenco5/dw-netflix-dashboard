@@ -527,7 +527,18 @@ JOIN dim_pais p           ON h.id_pais = p.id_pais;`,`SELECT grupo, tipo,
 FROM (SELECT DISTINCT show_id, grupo, tipo, duracion
       FROM pregunta4_antiguo_reciente) AS t
 GROUP BY grupo, tipo
-ORDER BY grupo, tipo;`],
+ORDER BY grupo, tipo;`,`SELECT grupo, genero, titulos
+FROM (
+    SELECT grupo,
+           genero,
+           COUNT(DISTINCT show_id) AS titulos,
+           ROW_NUMBER() OVER (PARTITION BY grupo
+                              ORDER BY COUNT(DISTINCT show_id) DESC) AS posicion
+    FROM pregunta4_antiguo_reciente
+    GROUP BY grupo, genero
+) AS ranking
+WHERE posicion <= 3
+ORDER BY grupo, titulos DESC;`],
 5:[`CREATE OR REPLACE VIEW pregunta5_directores AS
 SELECT d.nombre_director  AS director,
        t.tipo_contenido   AS tipo,
@@ -557,7 +568,7 @@ HAVING COUNT(DISTINCT h.show_id) >= 20
 ORDER BY titulos DESC;`,`SELECT pais, titulos, generos_distintos
 FROM pregunta6_diversidad_generos
 ORDER BY generos_distintos DESC, titulos DESC;`]};
-const KW = /\b(CREATE|OR|REPLACE|VIEW|AS|SELECT|DISTINCT|FROM|JOIN|ON|WHERE|AND|IS|NOT|NULL|GROUP|BY|ORDER|DESC|LIMIT|HAVING|CASE|WHEN|THEN|ELSE|END|IN|BETWEEN|COUNT|SUM|AVG|ROUND)\b/g;
+const KW = /\b(CREATE|OR|REPLACE|VIEW|AS|SELECT|DISTINCT|FROM|JOIN|ON|WHERE|AND|IS|NOT|NULL|GROUP|BY|ORDER|DESC|LIMIT|HAVING|CASE|WHEN|THEN|ELSE|END|IN|BETWEEN|COUNT|SUM|AVG|ROUND|ROW_NUMBER|OVER|PARTITION)\b/g;
 const hl = s => esc(s).replace(KW,'<span class="kw">$1</span>');
 
 /* ---------- preguntas ---------- */
@@ -589,7 +600,8 @@ qs.innerHTML = Q.map(q=>`
   <p class="answer">${q.ans}</p>
   <details><summary>Consulta SQL</summary><div>
     <p style="font-size:.85rem;color:var(--ink-3)">Vista en el modelo estrella</p><pre>${hl(SQL[q.n][0])}</pre>
-    <p style="font-size:.85rem;color:var(--ink-3)">Consulta del tablero</p><pre>${hl(SQL[q.n][1])}</pre>
+    <p style="font-size:.85rem;color:var(--ink-3)">Consulta del tablero</p><pre>${hl(SQL[q.n][1])}</pre>${SQL[q.n][2]?`
+    <p style="font-size:.85rem;color:var(--ink-3)">Consulta del top 3 de géneros por grupo</p><pre>${hl(SQL[q.n][2])}</pre>`:''}
   </div></details>
   <details><summary>Tabla de resultados</summary><div><div class="tw" id="tab${q.n}"></div></div></details>
 </article>`).join('');

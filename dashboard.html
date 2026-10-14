@@ -253,6 +253,20 @@ class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#c
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> pregunta4_antiguo_reciente) <span class="kw">AS</span> t</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> grupo, tipo</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> grupo, tipo;</span></code></pre></div>
+<h3 id="consulta-top3-generos">Consulta del top 3 de géneros por grupo</h3>
+<pre><code class="language-sql">SELECT grupo, genero, titulos
+FROM (
+    SELECT grupo,
+           genero,
+           COUNT(DISTINCT show_id) AS titulos,
+           ROW_NUMBER() OVER (PARTITION BY grupo
+                              ORDER BY COUNT(DISTINCT show_id) DESC) AS posicion
+    FROM pregunta4_antiguo_reciente
+    GROUP BY grupo, genero
+) AS ranking
+WHERE posicion &lt;= 3
+ORDER BY grupo, titulos DESC;
+</code></pre>
 <h3 id="resultado-2">Resultado</h3>
 <table>
 <thead>
